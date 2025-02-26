@@ -23,6 +23,9 @@ export const useProfileProgressions = (params: {
         destinyMembershipId: params.destinyMembershipId,
         membershipType: params.membershipType,
       }),
-    select: (data) => Object.values(Object.values(data)[0].progressions),
+    select: (data) => ({
+      characters: data.characters.data!,
+      profileProgressions: data.characterProgressions.data!,
+    }),
   });
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { Main } from "@/components/Main";
+import { Main } from "@/components/content/Main";
 import { PageSkeleton } from "@/components/PageSkeleton";
 import { useProfileProgressions } from "@/hooks/useDestinyCharacters";
 
@@ -58,9 +58,17 @@ export default function Home() {
     return null;
   }
 
+  const profileProgressions = Object.values(
+    Object.values(progressionsQueryQuery.data.profileProgressions)[0]
+      .progressions
+  );
+
   return (
     <Suspense fallback={<PageSkeleton />}>
-      <Main characterProgressions={progressionsQueryQuery.data} />
+      <Main
+        profileProgressions={profileProgressions}
+        characters={progressionsQueryQuery.data.characters}
+      />
     </Suspense>
   );
 }

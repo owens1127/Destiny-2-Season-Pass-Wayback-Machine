@@ -111,7 +111,7 @@ export class BungieHttpClient {
     return await getProfile(this.platformHttp(params.accessToken), {
       destinyMembershipId: params.destinyMembershipId,
       membershipType: params.membershipType,
-      components: [202],
-    }).then((res) => res.Response.characterProgressions.data!);
+      components: [200, 202],
+    }).then((res) => res.Response);
   }
 }
