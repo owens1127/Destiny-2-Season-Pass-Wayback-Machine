@@ -64,7 +64,7 @@ export default function App() {
   );
 
   return (
-    <Suspense fallback={<PageSkeleton />}>
+    <Suspense>
       <Main
         profileProgressions={profileProgressions}
         characters={progressionsQueryQuery.data.characters}

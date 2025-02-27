@@ -14,18 +14,19 @@ import {
 } from "bungie-net-core/models";
 import { getMembershipDataForCurrentUser } from "bungie-net-core/endpoints/User";
 
-const getBungieCookie = async (name: string) => {
-  return new Promise<string>((resolve) =>
-    chrome.cookies.getAll({ domain: "www.bungie.net", name }, (cookies) => {
-      resolve(cookies[0]?.value ?? "");
-    })
+const getCookie = (name: string) => {
+  return (
+    document.cookie
+      .split("; ")
+      .find((cookie) => cookie.startsWith(`${name}=`))
+      ?.split("=")[1] ?? ""
   );
 };
 
 export class BungieHttpClient {
   private platformHttp: BungieHttpProtocol = async (config) => {
     const headers = new Headers({
-      "x-csrf": await getBungieCookie("bungled"),
+      "x-csrf": getCookie("bungled"),
       "X-API-Key": import.meta.env.VITE_BUNGIE_API_KEY!,
     });
 

@@ -11,7 +11,7 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: "public/manifest.json",
+          src: path.resolve(__dirname, "manifest.json"),
           dest: ".",
         },
       ],
@@ -19,14 +19,21 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(__dirname, "src"),
     },
   },
   build: {
     outDir: "build",
     rollupOptions: {
       input: {
-        main: "./index.html",
+        background: path.resolve(__dirname, "src/background.ts"),
+        content: path.resolve(__dirname, "src/content.tsx"),
+        styles: path.resolve(__dirname, "src/styles.css"),
+      },
+      output: {
+        entryFileNames: "assets/[name].js",
+        chunkFileNames: "assets/[name].js",
+        assetFileNames: "assets/[name].[ext]",
       },
     },
   },

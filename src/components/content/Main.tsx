@@ -144,7 +144,7 @@ export const Main = React.memo(
     } = useCategorizedItems(allUnclaimedItems);
 
     return (
-      <main className="container mx-auto p-4">
+      <div className="container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4">Unclaimed Rewards</h1>
         <div className="flex flex-wrap gap-4">
           <UnclaimedItemCategory
@@ -310,7 +310,7 @@ export const Main = React.memo(
             items={uncategorized}
           />
         </div>
-      </main>
+      </div>
     );
   }
 );

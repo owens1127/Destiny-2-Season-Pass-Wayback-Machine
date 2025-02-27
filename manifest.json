@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Season Pass Wayback Machine",
+  "description": "A simple app to claim rewards from previous seasons",
+  "version": "1.0.0",
+  "permissions": ["tabs", "storage"],
+  "host_permissions": ["*://www.bungie.net/7/*/Seasons/*"],
+  "action": {},
+  "background": {
+    "service_worker": "assets/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://www.bungie.net/7/*/Seasons/*"],
+      "js": ["assets/content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "matches": ["*://www.bungie.net/*"],
+      "resources": ["assets/styles.css"]
+    }
+  ]
+}
