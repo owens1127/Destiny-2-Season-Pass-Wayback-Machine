@@ -1,12 +1,8 @@
+import { useClaimItem } from "@/hooks/useClaimItem";
 import { useToast } from "@/hooks/useToast";
 import { cn } from "@/lib/utils";
 import { ItemVariant, UnclaimedItem } from "@/types";
-import { useMutation } from "@tanstack/react-query";
-import { BungieNetResponse } from "bungie-net-core/models";
-import Image from "next/image";
-import React, { useCallback } from "react";
-
-const BungieNetApiKey = "10E792629C2A47E19356B8A79EEFA640";
+import React from "react";
 
 export const SeasonPassItem = React.memo(
   ({ item, variant }: { item: UnclaimedItem; variant: ItemVariant }) => {
@@ -15,61 +11,19 @@ export const SeasonPassItem = React.memo(
 
     const { toast } = useToast();
 
-    const claimItem = useCallback(async () => {
-      const response = await fetch(
-        "https://www.bungie.net/Platform/Destiny2/Actions/Seasons/ClaimReward/",
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "x-api-key": BungieNetApiKey,
-            "x-csrf":
-              document.cookie
-                .split("; ")
-                .find((row) => row.startsWith("bungled="))
-                ?.split("=")[1] ?? "",
-          },
-          body: JSON.stringify({
-            characterId: item.characterId,
-            membershipType: item.membershipType,
-            rewardIndex: item.rewardItem.rewardItemIndex,
-            seasonHash: item.seasonDef.hash,
-            progressionHash: item.progressionHash,
-          }),
-        }
-      );
-
-      if (response.headers.get("Content-Type")?.includes("application/json")) {
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.Message, {
-            cause: data,
-          });
-        }
-
-        return data as BungieNetResponse<unknown>;
-      } else {
-        throw new Error(response.statusText, {
-          cause: response,
-        });
-      }
-    }, [
-      item.characterId,
-      item.membershipType,
-      item.progressionHash,
-      item.rewardItem.rewardItemIndex,
-      item.seasonDef.hash,
-    ]);
-
-    const claimItemMutation = useMutation({
-      mutationFn: claimItem,
+    const claimItemMutation = useClaimItem({
       onError: (error) => {
         toast({
-          title: "Error claiming reward",
+          title: "Error claiming item",
           description: error.message,
           variant: "destructive",
-          duration: 5000,
+        });
+      },
+      onSuccess: () => {
+        toast({
+          title: "Item claimed",
+          description: "Item has been claimed",
+          variant: "default",
         });
       },
     });
@@ -79,20 +33,24 @@ export const SeasonPassItem = React.memo(
         className="cursor-pointer flex flex-col items-center border-2 border-gray-500 rounded w-20 h-20 relative group hover:scale-[1.03]"
         onClick={() => {
           console.log(item);
-          claimItemMutation.mutate();
+          claimItemMutation.mutate({
+            characterId: item.characterId,
+            membershipType: item.membershipType,
+            rewardIndex: item.rewardItem.rewardItemIndex,
+            seasonHash: item.seasonDef.hash,
+            progressionHash: item.progressionHash,
+          });
         }}
       >
-        <Image
-          unoptimized
+        <img
           src={`https://www.bungie.net${item.itemDef.displayProperties.icon}`}
-          fill
           alt={item.itemDef.displayProperties.name}
+          className="absolute w-full h-full object-cover"
         />
         {item.itemDef.iconWatermark && (
-          <Image
-            unoptimized
+          <img
             src={`https://www.bungie.net${item.itemDef.iconWatermark}`}
-            fill
+            className="absolute w-full h-full object-cover"
             alt=""
           />
         )}

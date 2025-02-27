@@ -9,7 +9,7 @@ import { useDestinyMembership } from "@/hooks/useDestinyMembership";
 import { useToast } from "@/hooks/useToast";
 import { Suspense, useEffect } from "react";
 
-export default function Home() {
+export default function App() {
   // preloading
   useDestinyManifestComponent("DestinyActivityDefinition");
   useDestinyManifestComponent("DestinySeasonDefinition");

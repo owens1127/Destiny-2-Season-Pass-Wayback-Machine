@@ -1,4 +1,4 @@
-import { BungieHttpClientContext } from "@/components/auth/BungieHttpClientProvider";
+import { BungieHttpClientContext } from "@/components/providers/BungieHttpClientProvider";
 import { useContext } from "react";
 
 export const useBungie = () => {

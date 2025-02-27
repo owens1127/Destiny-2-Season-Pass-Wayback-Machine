@@ -5,52 +5,60 @@ import {
 } from "bungie-net-core/manifest";
 import {
   getDestinyManifest,
-  getLinkedProfiles,
   getProfile,
 } from "bungie-net-core/endpoints/Destiny2";
-import { BungieMembershipType, DestinyManifest } from "bungie-net-core/models";
+import {
+  BungieMembershipType,
+  BungieNetResponse,
+  DestinyManifest,
+} from "bungie-net-core/models";
+import { getMembershipDataForCurrentUser } from "bungie-net-core/endpoints/User";
+
+const getBungieCookie = async (name: string) => {
+  return new Promise<string>((resolve) =>
+    chrome.cookies.getAll({ domain: "www.bungie.net", name }, (cookies) => {
+      resolve(cookies[0]?.value ?? "");
+    })
+  );
+};
 
 export class BungieHttpClient {
-  private platformHttp =
-    (access_token?: string): BungieHttpProtocol =>
-    async (config) => {
-      const headers = new Headers({
-        "X-API-Key": process.env.NEXT_PUBLIC_BUNGIE_API_KEY!,
-      });
+  private platformHttp: BungieHttpProtocol = async (config) => {
+    const headers = new Headers({
+      "x-csrf": await getBungieCookie("bungled"),
+      "X-API-Key": import.meta.env.VITE_BUNGIE_API_KEY!,
+    });
 
-      if (access_token) {
-        headers.set("Authorization", `Bearer ${access_token}`);
-      }
+    if (config.contentType) {
+      headers.set("Content-Type", config.contentType);
+    }
 
-      if (config.contentType) {
-        headers.set("Content-Type", config.contentType);
-      }
+    const url =
+      config.baseUrl + (config.searchParams ? `?${config.searchParams}` : "");
 
-      const url =
-        config.baseUrl + (config.searchParams ? `?${config.searchParams}` : "");
+    const response = await fetch(url, {
+      credentials: "include",
+      method: config.method,
+      headers,
+      body: config.body ? JSON.stringify(config.body) : undefined,
+    });
 
-      const response = await fetch(url, {
-        method: config.method,
-        headers,
-        body: config.body ? JSON.stringify(config.body) : undefined,
-      });
+    if (response.headers.get("Content-Type")?.includes("application/json")) {
+      const data = await response.json();
 
-      if (response.headers.get("Content-Type")?.includes("application/json")) {
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.Message, {
-            cause: data,
-          });
-        }
-
-        return data;
-      } else {
-        throw new Error(response.statusText, {
-          cause: response,
+      if (!response.ok) {
+        throw new Error(data.Message, {
+          cause: data,
         });
       }
-    };
+
+      return data;
+    } else {
+      throw new Error(response.statusText, {
+        cause: response,
+      });
+    }
+  };
 
   private manifestComponentHttp: BungieHttpProtocol = async (config) => {
     const response = await fetch(config.baseUrl, {
@@ -76,7 +84,7 @@ export class BungieHttpClient {
   };
 
   async getManifest() {
-    return await getDestinyManifest(this.platformHttp()).then(
+    return await getDestinyManifest(this.platformHttp).then(
       (res) => res.Response
     );
   }
@@ -92,26 +100,38 @@ export class BungieHttpClient {
     });
   }
 
-  async getMembershipData(params: {
-    accessToken: string;
-    bungieMembershipId: string;
-  }) {
-    return await getLinkedProfiles(this.platformHttp(params.accessToken), {
-      membershipId: params.bungieMembershipId,
-      membershipType: -1,
-      getAllMemberships: true,
-    }).then((res) => res.Response);
+  async getMembershipData() {
+    return await getMembershipDataForCurrentUser(this.platformHttp).then(
+      (res) => res.Response
+    );
   }
 
   async getProfileProgressions(params: {
-    accessToken: string;
     destinyMembershipId: string;
     membershipType: BungieMembershipType;
   }) {
-    return await getProfile(this.platformHttp(params.accessToken), {
+    return await getProfile(this.platformHttp, {
       destinyMembershipId: params.destinyMembershipId,
       membershipType: params.membershipType,
       components: [200, 202],
     }).then((res) => res.Response);
+  }
+
+  async claimSeasonPassReward(params: {
+    characterId: string;
+    membershipType: BungieMembershipType;
+    rewardIndex: number;
+    seasonHash: number;
+    progressionHash: number;
+  }) {
+    const response: BungieNetResponse<unknown> = await this.platformHttp({
+      baseUrl:
+        "https://www.bungie.net/Platform/Destiny2/Actions/Seasons/ClaimReward/",
+      method: "POST",
+      contentType: "application/json",
+      body: params,
+    });
+
+    return response.Response;
   }
 }
