@@ -213,26 +213,6 @@ export const Main = React.memo(
             variant="currency"
           />
           <UnclaimedItemCategory
-            category="Eververse Engrams"
-            items={eververseEngrams}
-            variant="engram"
-          />
-          <UnclaimedItemCategory
-            category="Exotic Engrams"
-            items={exoticEngrams}
-            variant="engram"
-          />
-          <UnclaimedItemCategory
-            category="Legendary Engrams"
-            items={legendaryEngrams}
-            variant="engram"
-          />
-          <UnclaimedItemCategory
-            category="Seasonal Engrams"
-            items={seasonalEngrams}
-            variant="engram"
-          />
-          <UnclaimedItemCategory
             category="Kinetic Weapons"
             items={kineticWeapons}
           />
@@ -286,6 +266,27 @@ export const Main = React.memo(
           />
           <UnclaimedItemCategory category="Titan Greaves" items={titanLegs} />
           <UnclaimedItemCategory category="Titan Marks" items={titanMarks} />
+
+          <UnclaimedItemCategory
+            category="Exotic Engrams"
+            items={exoticEngrams}
+            variant="engram"
+          />
+          <UnclaimedItemCategory
+            category="Legendary Engrams"
+            items={legendaryEngrams}
+            variant="engram"
+          />
+          <UnclaimedItemCategory
+            category="Seasonal Engrams"
+            items={seasonalEngrams}
+            variant="engram"
+          />
+          <UnclaimedItemCategory
+            category="Eververse Engrams"
+            items={eververseEngrams}
+            variant="engram"
+          />
 
           <UnclaimedItemCategory category="Ornaments" items={ornaments} />
 

@@ -57,8 +57,8 @@ export const UnclaimedItemCategory = ({
     <div className="w-full">
       <h3 className="text-xl uppercase"> {category}</h3>
       <p className="text-md text-gray-200">
-        <span className="font-semibold">{itemCount.toLocaleString()}</span>{" "}
-        items
+        <span className="font-semibold">{itemCount.toLocaleString()}</span> item
+        {itemCount === 1 ? "" : "s"}
         {isShowQuantity && (
           <>
             {" • "}
