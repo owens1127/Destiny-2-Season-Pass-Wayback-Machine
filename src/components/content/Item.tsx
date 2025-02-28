@@ -26,9 +26,7 @@ export const SeasonPassItem = React.memo(
       },
       onSuccess: () => {
         toast.success("Item claimed", {
-          description: `${quantity} ${item.itemDef.displayProperties.name}${
-            quantity === 1 ? "" : "s"
-          } has been transferred to the inventory of your ${
+          description: `${quantity} ${item.itemDef.displayProperties.name} has been transferred to the inventory of your ${
             classNameMap[item.characterClass]
           }`
         });
@@ -55,9 +53,7 @@ export const SeasonPassItem = React.memo(
               [
                 `Are you sure you want to claim ${quantity} ${
                   item.itemDef.displayProperties.name
-                }${quantity === 1 ? "" : "s"} from ${
-                  item.seasonDef.displayProperties.name
-                }?`,
+                } from ${item.seasonDef.displayProperties.name}?`,
                 `Note: This item will be transferred to the inventory of your ${
                   classNameMap[item.characterClass]
                 }.`,
@@ -98,7 +94,7 @@ export const SeasonPassItem = React.memo(
             {`${item.seasonDef.displayProperties.name} (${item.seasonDef.seasonNumber})`}
           </p>
           <p className="text-sm text-gray-200">
-            {`Rank ${item.rewardItem.rewardItemIndex}`}
+            {`Rank ${item.rewardItem.rewardedAtProgressionLevel}`}
           </p>
         </div>
 

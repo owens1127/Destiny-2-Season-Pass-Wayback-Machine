@@ -70,8 +70,9 @@ export const UnclaimedItemCategory = ({
         />
       </h3>
       <p className="text-md text-gray-200">
-        <span className="font-semibold">{itemCount.toLocaleString()}</span> item
-        {itemCount === 1 ? "" : "s"}
+        <span className="font-semibold">
+          {itemCount.toLocaleString() + "item(s)"}
+        </span>
         {isShowQuantity && (
           <>
             {" • "}

@@ -135,6 +135,7 @@ export const Main = React.memo(
       titanChests,
       titanLegs,
       titanMarks,
+      hiddenLegendaryWeaponRewards,
       ghostShells,
       vehicles,
       ships,
@@ -232,6 +233,10 @@ export const Main = React.memo(
             <UnclaimedItemCategory
               category="Power Weapons"
               items={powerWeapons}
+            />
+            <UnclaimedItemCategory
+              category="Hidden Legendary Weapon Rewards"
+              items={hiddenLegendaryWeaponRewards}
             />
 
             <UnclaimedItemCategory
@@ -388,6 +393,7 @@ const useCategorizedItems = (items: UnclaimedItem[]) =>
     const titanChests: UnclaimedItem[] = [];
     const titanLegs: UnclaimedItem[] = [];
     const titanMarks: UnclaimedItem[] = [];
+    const hiddenLegendaryWeaponRewards: UnclaimedItem[] = [];
 
     for (const item of items) {
       const { itemDef, rewardItem } = item;
@@ -413,10 +419,11 @@ const useCategorizedItems = (items: UnclaimedItem[]) =>
         eververseEngrams.push(item);
       } else if (rewardItem.itemHash === 1260977951) {
         legendaryEngrams.push(item);
-      } else if (rewardItem.itemHash === 903043774) {
+      } else if ([3875551374, 903043774].includes(rewardItem.itemHash)) {
         exoticEngrams.push(item);
-        // TODO
-      } else if (itemDef.itemTypeDisplayName === "Seasonal Engram") {
+      } else if (
+        [375726501, 1558457900].includes(itemDef.inventory?.bucketTypeHash ?? 0)
+      ) {
         seasonalEngrams.push(item);
       } else if (itemDef.inventory?.bucketTypeHash === 1498876634) {
         kineticWeapons.push(item);
@@ -424,15 +431,14 @@ const useCategorizedItems = (items: UnclaimedItem[]) =>
         energyWeapons.push(item);
       } else if (itemDef.inventory?.bucketTypeHash === 953998645) {
         powerWeapons.push(item);
+      } else if (rewardItem.itemHash === 4147131133) {
+        hiddenLegendaryWeaponRewards.push(item);
       } else if (rewardItem.itemHash === 800069450) {
         strangeCoins.push(item);
       } else if (itemDef.itemType === 29) {
         finishers.push(item);
       } else if (rewardItem.itemHash === 3467984096) {
         exoticCiphers.push(item);
-        // TODO
-      } else if (itemDef.itemTypeDisplayName === "Seasonal Currency") {
-        seasonalCurrencies.push(item);
       } else if (rewardItem.itemHash === 3282419336) {
         raidBanners.push(item);
       } else if (itemDef.inventory?.bucketTypeHash === 3448274439) {
@@ -511,22 +517,18 @@ const useCategorizedItems = (items: UnclaimedItem[]) =>
         vehicles.push(item);
       } else if (itemDef.inventory?.bucketTypeHash === 284967655) {
         ships.push(item);
-        // TODO
-      } else if (
-        itemDef.itemTypeDisplayName === "Emote" ||
-        itemDef.itemTypeDisplayName === "Multiplayer Emote"
-      ) {
+      } else if (itemDef.itemCategoryHashes?.includes(44)) {
         emotes.push(item);
-        // TODO
-      } else if (itemDef.itemTypeDisplayName === "Transmat Effect") {
+      } else if (itemDef.itemCategoryHashes?.includes(177260082)) {
         transmats.push(item);
-        // TODO
-      } else if (itemDef.itemTypeDisplayName === "Ghost Projection") {
+      } else if (itemDef.itemCategoryHashes?.includes(1449602859)) {
         projections.push(item);
       } else if (itemDef.inventory?.bucketTypeHash === 3313201758) {
         ornaments.push(item);
-      } else if (itemDef.itemType === 19) {
+      } else if (itemDef.itemCategoryHashes?.includes(41)) {
         shaders.push(item);
+      } else if (itemDef.inventory?.bucketTypeHash === 1469714392) {
+        seasonalCurrencies.push(item);
       } else {
         uncategorized.push(item);
       }
@@ -569,6 +571,7 @@ const useCategorizedItems = (items: UnclaimedItem[]) =>
       titanChests,
       titanLegs,
       titanMarks,
+      hiddenLegendaryWeaponRewards,
       ghostShells,
       vehicles,
       ships,

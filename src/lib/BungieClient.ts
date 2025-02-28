@@ -19,22 +19,19 @@ import { getCookie } from "./cookie";
 export class BungieHttpClient {
   private platformHttp: BungieHttpProtocol = async (config) => {
     const headers = new Headers({
-      "x-csrf": getCookie("bungled"),
-      "X-API-Key": import.meta.env.VITE_BUNGIE_API_KEY!
+      "x-api-key": import.meta.env.VITE_BUNGIE_API_KEY!,
+      "x-csrf": getCookie("bungled")
     });
 
     if (config.contentType) {
       headers.set("Content-Type", config.contentType);
     }
 
-    const searchParams = new URLSearchParams(config.searchParams);
-    const locParams = new URLSearchParams(getCookie("bungleloc"));
-    for (const [key, value] of locParams) {
-      searchParams.append(key, value);
-    }
-
-    const url =
-      config.baseUrl + (config.searchParams ? `?${config.searchParams}` : "");
+    const params = new URLSearchParams(getCookie("bungleloc"));
+    config.searchParams?.forEach((value, key) => {
+      params.set(key, value);
+    });
+    const url = config.baseUrl + `?${params}`;
 
     const response = await fetch(url, {
       credentials: "include",
@@ -62,8 +59,7 @@ export class BungieHttpClient {
 
   private manifestComponentHttp: BungieHttpProtocol = async (config) => {
     const response = await fetch(config.baseUrl, {
-      method: config.method,
-      body: config.body ? JSON.stringify(config.body) : undefined
+      method: "GET"
     });
 
     if (response.headers.get("Content-Type")?.includes("application/json")) {
