@@ -1,17 +1,17 @@
 import React from "react";
 import {
   DestinyCharacterComponent,
-  DestinyProgression,
+  DestinyProgression
 } from "bungie-net-core/models";
 import { useDestinyManifestComponentsSuspended } from "@/hooks/useDestinyManifestComponent";
 import { UnclaimedItem } from "@/types";
-import { UnclaimedItemCategory } from "./ItemCategory";
 import { CollapseManager } from "./CollapseManager";
+import { UnclaimedItemCategory } from "./ItemCategory";
 
 export const Main = React.memo(
   ({
     profileProgressions,
-    characters,
+    characters
   }: {
     profileProgressions: DestinyProgression[];
     characters: Record<string, DestinyCharacterComponent>;
@@ -20,7 +20,7 @@ export const Main = React.memo(
       useDestinyManifestComponentsSuspended([
         "DestinySeasonDefinition",
         "DestinyProgressionDefinition",
-        "DestinyInventoryItemLiteDefinition",
+        "DestinyInventoryItemLiteDefinition"
       ]);
 
     const primaryCharacter = Object.values(characters).sort(
@@ -49,7 +49,7 @@ export const Main = React.memo(
             progression,
             seasonDef,
             progressionDef:
-              progressionDefs.data[seasonDef.seasonPassProgressionHash!],
+              progressionDefs.data[seasonDef.seasonPassProgressionHash!]
           };
         })
         .filter(({ progressionDef }) => !!progressionDef.rewardItems?.length)
@@ -83,7 +83,7 @@ export const Main = React.memo(
                   progression.rewardItemSocketOverrideStates[rewardIndex],
                 rewardItem: progressionDef.rewardItems[rewardIndex],
                 itemDef,
-                state,
+                state
               };
             })
             .filter(({ state }) => {
@@ -96,7 +96,7 @@ export const Main = React.memo(
       itemDefs.data,
       primaryCharacter.characterId,
       primaryCharacter.membershipType,
-      seasonProgressions,
+      seasonProgressions
     ]);
     const {
       uncategorized,
@@ -143,13 +143,13 @@ export const Main = React.memo(
       projections,
       ornaments,
       synthweaves,
-      shaders,
+      shaders
     } = useCategorizedItems(allUnclaimedItems);
 
     return (
-      <div className="dark container mx-auto p-4 mb-8">
+      <div className="dark container mx-auto mb-8 p-4">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold mb-4">All Unclaimed Rewards</h1>
+          <h1 className="mb-4 text-2xl font-bold">All Unclaimed Rewards</h1>
           <p className="text-sm text-gray-400">
             Powered by the Destiny 2 Season Pass Wayback Machine
           </p>
@@ -411,11 +411,12 @@ const useCategorizedItems = (items: UnclaimedItem[]) =>
         synthweaves.push(item);
       } else if (rewardItem.itemHash === 1968811824) {
         eververseEngrams.push(item);
-      } else if (itemDef.displayProperties.name.includes("Legendary Engram")) {
+      } else if (rewardItem.itemHash === 1260977951) {
         legendaryEngrams.push(item);
-      } else if (itemDef.itemTypeAndTierDisplayName.includes("Exotic Engram")) {
+      } else if (rewardItem.itemHash === 903043774) {
         exoticEngrams.push(item);
-      } else if (itemDef.itemTypeDisplayName.includes("Engram")) {
+        // TODO
+      } else if (itemDef.itemTypeDisplayName === "Seasonal Engram") {
         seasonalEngrams.push(item);
       } else if (itemDef.inventory?.bucketTypeHash === 1498876634) {
         kineticWeapons.push(item);
@@ -429,6 +430,7 @@ const useCategorizedItems = (items: UnclaimedItem[]) =>
         finishers.push(item);
       } else if (rewardItem.itemHash === 3467984096) {
         exoticCiphers.push(item);
+        // TODO
       } else if (itemDef.itemTypeDisplayName === "Seasonal Currency") {
         seasonalCurrencies.push(item);
       } else if (rewardItem.itemHash === 3282419336) {
@@ -509,13 +511,16 @@ const useCategorizedItems = (items: UnclaimedItem[]) =>
         vehicles.push(item);
       } else if (itemDef.inventory?.bucketTypeHash === 284967655) {
         ships.push(item);
+        // TODO
       } else if (
         itemDef.itemTypeDisplayName === "Emote" ||
         itemDef.itemTypeDisplayName === "Multiplayer Emote"
       ) {
         emotes.push(item);
+        // TODO
       } else if (itemDef.itemTypeDisplayName === "Transmat Effect") {
         transmats.push(item);
+        // TODO
       } else if (itemDef.itemTypeDisplayName === "Ghost Projection") {
         projections.push(item);
       } else if (itemDef.inventory?.bucketTypeHash === 3313201758) {
@@ -572,6 +577,6 @@ const useCategorizedItems = (items: UnclaimedItem[]) =>
       projections,
       ornaments,
       synthweaves,
-      shaders,
+      shaders
     };
   }, [items]);

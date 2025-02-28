@@ -1,17 +1,17 @@
 import {
   useQuery,
   useSuspenseQueries,
-  UseSuspenseQueryResult,
+  UseSuspenseQueryResult
 } from "@tanstack/react-query";
-import { useBungie } from "./useBungie";
-import {
-  useDestinyManifest,
-  useDestinyManifestSuspended,
-} from "./useDestinyManifest";
 import {
   AllDestinyManifestComponents,
-  DestinyManifestDefinition,
+  DestinyManifestDefinition
 } from "bungie-net-core/manifest";
+import { useBungie } from "@/components/providers/BungieHttpClientProvider";
+import {
+  useDestinyManifest,
+  useDestinyManifestSuspended
+} from "./useDestinyManifest";
 
 export const useDestinyManifestComponent = <
   T extends keyof AllDestinyManifestComponents
@@ -25,7 +25,7 @@ export const useDestinyManifestComponent = <
     enabled: manifestQuery.isSuccess,
     queryKey: ["Destiny2ManifestComponent", tableName],
     queryFn: () => bungie.getManifestComponent(tableName, manifestQuery.data!),
-    staleTime: 3600_000,
+    staleTime: 3600_000
   });
 };
 
@@ -46,7 +46,7 @@ export const useDestinyManifestComponentsSuspended = <
     queries: tableNames.map((tableName) => ({
       queryKey: ["Destiny2ManifestComponent", tableName],
       queryFn: () => bungie.getManifestComponent(tableName, manifestQuery.data),
-      staleTime: 3600_000,
-    })),
+      staleTime: 3600_000
+    }))
   });
 };

@@ -1,13 +1,12 @@
 "use client";
 
-import { Main } from "@/components/content/Main";
-import { PageSkeleton } from "@/components/PageSkeleton";
-import { useProfileProgressions } from "@/hooks/useDestinyCharacters";
-
-import { useDestinyManifestComponent } from "@/hooks/useDestinyManifestComponent";
-import { useDestinyMembership } from "@/hooks/useDestinyMembership";
 import { Suspense, useEffect } from "react";
 import { toast } from "sonner";
+import { Main } from "@/components/content/Main";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useProfileProgressions } from "@/hooks/useDestinyCharacters";
+import { useDestinyManifestComponent } from "@/hooks/useDestinyManifestComponent";
+import { useDestinyMembership } from "@/hooks/useDestinyMembership";
 
 export default function App() {
   // preloading
@@ -20,18 +19,18 @@ export default function App() {
     membershipQuery.isSuccess
       ? {
           destinyMembershipId: membershipQuery.data.membershipId,
-          membershipType: membershipQuery.data.membershipType,
+          membershipType: membershipQuery.data.membershipType
         }
       : {
           destinyMembershipId: "",
-          membershipType: 0,
+          membershipType: 0
         }
   );
 
   useEffect(() => {
     if (membershipQuery.isError) {
       toast.error("Error fetching membership data", {
-        description: membershipQuery.error.message,
+        description: membershipQuery.error.message
       });
     }
   }, [membershipQuery.isError, membershipQuery.error]);
@@ -39,7 +38,7 @@ export default function App() {
   useEffect(() => {
     if (progressionsQueryQuery.isError) {
       toast.error("Error fetching character data", {
-        description: progressionsQueryQuery.error.message,
+        description: progressionsQueryQuery.error.message
       });
     }
   }, [progressionsQueryQuery.isError, progressionsQueryQuery.error]);
@@ -70,3 +69,7 @@ export default function App() {
     </Suspense>
   );
 }
+
+const PageSkeleton = () => {
+  return <Skeleton className="h-96 w-full" />;
+};

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { useBungie } from "./useBungie";
 import { BungieMembershipType } from "bungie-net-core/models";
+import { useBungie } from "@/components/providers/BungieHttpClientProvider";
 
 export const useProfileProgressions = (params: {
   destinyMembershipId: string;
@@ -13,16 +13,16 @@ export const useProfileProgressions = (params: {
     queryKey: [
       "getBasicProfile",
       params.membershipType,
-      params.destinyMembershipId,
+      params.destinyMembershipId
     ],
     queryFn: () =>
       bungie.getProfileProgressions({
         destinyMembershipId: params.destinyMembershipId,
-        membershipType: params.membershipType,
+        membershipType: params.membershipType
       }),
     select: (data) => ({
       characters: data.characters.data!,
-      profileProgressions: data.characterProgressions.data!,
-    }),
+      profileProgressions: data.characterProgressions.data!
+    })
   });
 };

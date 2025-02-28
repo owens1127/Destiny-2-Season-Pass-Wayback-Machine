@@ -1,8 +1,8 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
-import { viteStaticCopy } from "vite-plugin-static-copy";
 import path from "path";
+import tailwindcss from "@tailwindcss/vite";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 
 export default defineConfig({
   plugins: [
@@ -12,32 +12,32 @@ export default defineConfig({
       targets: [
         {
           src: path.resolve(__dirname, "manifest.json"),
-          dest: ".",
+          dest: "."
         },
         {
           src: path.resolve(__dirname, "icon.png"),
-          dest: "./assets",
-        },
-      ],
-    }),
+          dest: "./assets"
+        }
+      ]
+    })
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
-    },
+      "@": path.resolve(__dirname, "src")
+    }
   },
   build: {
     outDir: "build",
     rollupOptions: {
       input: {
         content: path.resolve(__dirname, "src/content.tsx"),
-        styles: path.resolve(__dirname, "src/styles.css"),
+        styles: path.resolve(__dirname, "src/styles.css")
       },
       output: {
         entryFileNames: "assets/[name].js",
         chunkFileNames: "assets/[name].js",
-        assetFileNames: "assets/[name].[ext]",
-      },
-    },
-  },
+        assetFileNames: "assets/[name].[ext]"
+      }
+    }
+  }
 });

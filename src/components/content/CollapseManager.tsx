@@ -22,7 +22,7 @@ const readLocalStorage = () => {
 };
 
 export const CollapseManager = ({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) => {
@@ -55,7 +55,7 @@ export const useCollapse = (
     setState((prev) => {
       const newState = {
         ...prev,
-        [id]: newValue,
+        [id]: newValue
       };
       updateLocalStorage(newState);
       return newState;

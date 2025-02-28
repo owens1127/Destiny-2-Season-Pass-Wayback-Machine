@@ -1,14 +1,14 @@
+import React from "react";
+import { toast } from "sonner";
 import { useClaimItem } from "@/hooks/useClaimItem";
 import { cn } from "@/lib/utils";
 import { ItemVariant, UnclaimedItem } from "@/types";
-import React from "react";
-import { toast } from "sonner";
 
 const classNameMap = {
   0: "Titan",
   1: "Hunter",
   2: "Warlock",
-  3: "Unknown",
+  3: "Unknown"
 };
 
 export const SeasonPassItem = React.memo(
@@ -21,7 +21,7 @@ export const SeasonPassItem = React.memo(
     const claimItemMutation = useClaimItem({
       onError: (error) => {
         toast.error("Error claiming item", {
-          description: error.message,
+          description: error.message
         });
       },
       onSuccess: () => {
@@ -30,20 +30,20 @@ export const SeasonPassItem = React.memo(
             quantity === 1 ? "" : "s"
           } has been transferred to the inventory of your ${
             classNameMap[item.characterClass]
-          }`,
+          }`
         });
         setIsClaimed(true);
-      },
+      }
     });
 
     return (
       <div
         className={cn(
-          "cursor-pointer flex flex-col items-center border-2 border-gray-500 rounded-[0.125rem] w-14 h-14 md:w-20 md:h-20 relative group ",
+          "group relative flex h-14 w-14 cursor-pointer flex-col items-center rounded-[0.125rem] border-2 border-gray-500 md:h-20 md:w-20",
           {
             "hover:scale-[1.03]": !isClaimed,
             "opacity-50": isClaimed,
-            grayscale: isClaimed,
+            grayscale: isClaimed
           }
         )}
         onClick={() => {
@@ -52,11 +52,17 @@ export const SeasonPassItem = React.memo(
 
           if (
             !window.confirm(
-              `Are you sure you want to claim ${quantity} ${
-                item.itemDef.displayProperties.name
-              }${quantity === 1 ? "" : "s"} from ${
-                item.seasonDef.displayProperties.name
-              }?\nThis action is irreversible.`
+              [
+                `Are you sure you want to claim ${quantity} ${
+                  item.itemDef.displayProperties.name
+                }${quantity === 1 ? "" : "s"} from ${
+                  item.seasonDef.displayProperties.name
+                }?`,
+                `Note: This item will be transferred to the inventory of your ${
+                  classNameMap[item.characterClass]
+                }.`,
+                "This action is irreversible."
+              ].join("\n\n")
             )
           ) {
             return;
@@ -67,38 +73,41 @@ export const SeasonPassItem = React.memo(
             membershipType: item.membershipType,
             rewardIndex: item.rewardItem.rewardItemIndex,
             seasonHash: item.seasonDef.hash,
-            progressionHash: item.progressionHash,
+            progressionHash: item.progressionHash
           });
         }}
       >
         <img
           src={`https://www.bungie.net${item.itemDef.displayProperties.icon}`}
           alt={item.itemDef.displayProperties.name}
-          className="absolute w-full h-full object-cover"
+          className="absolute h-full w-full object-cover"
         />
         {item.itemDef.iconWatermark && (
           <img
             src={`https://www.bungie.net${item.itemDef.iconWatermark}`}
-            className="absolute w-full h-full object-cover"
+            className="absolute h-full w-full object-cover"
             alt=""
           />
         )}
 
-        <div className="opacity-0 group-hover:opacity-100 group-hover:absolute max-w-full group-hover:min-w-[150%] group-hover:max-w-none max-h:full group-hover:max-h-none bg-black/95 text-white rounded p-3 bottom-[90%] mb-1">
+        <div className="max-h:full bottom-[90%] mb-1 max-w-full rounded bg-black/95 p-3 text-white opacity-0 group-hover:absolute group-hover:max-h-none group-hover:max-w-none group-hover:min-w-[150%] group-hover:opacity-100">
           <p className="text-lg text-nowrap">
             {item.itemDef.displayProperties.name}
           </p>
-          <p className=" text-sm text-gray-400">
-            {`${item.seasonDef.displayProperties.name} (${item.seasonDef.seasonNumber}), rank ${item.rewardItem.rewardItemIndex}`}
+          <p className="text-sm text-gray-400">
+            {`${item.seasonDef.displayProperties.name} (${item.seasonDef.seasonNumber})`}
+          </p>
+          <p className="text-sm text-gray-200">
+            {`Rank ${item.rewardItem.rewardItemIndex}`}
           </p>
         </div>
 
         {isShowQuantity && (
           <div
             className={cn(
-              "absolute bottom-0 right-0 px-2 bg-black/70 text-white text-sm transition-opacity rounded-sm",
+              "absolute right-0 bottom-0 rounded-sm bg-black/70 px-2 text-sm text-white transition-opacity",
               {
-                "text-base": quantity < 100,
+                "text-base": quantity < 100
               }
             )}
           >

@@ -1,14 +1,14 @@
 "use client";
 
+import { createContext, useContext, useState } from "react";
 import { BungieHttpClient } from "@/lib/BungieClient";
-import { createContext, useState } from "react";
 
 export const BungieHttpClientContext = createContext<BungieHttpClient | null>(
   null
 );
 
 export const BungieHttpClientProvider = ({
-  children,
+  children
 }: {
   children?: React.ReactNode;
 }) => {
@@ -19,4 +19,12 @@ export const BungieHttpClientProvider = ({
       {children}
     </BungieHttpClientContext.Provider>
   );
+};
+
+export const useBungie = () => {
+  const ctx = useContext(BungieHttpClientContext);
+  if (!ctx) {
+    throw new Error("useBungie must be used within a BungieHttpClientProvider");
+  }
+  return ctx;
 };

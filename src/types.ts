@@ -5,7 +5,7 @@ import {
   DestinyProgressionRewardItemQuantity,
   DestinyProgressionRewardItemSocketOverrideState,
   DestinyProgressionRewardItemState,
-  DestinySeasonDefinition,
+  DestinySeasonDefinition
 } from "bungie-net-core/models";
 
 export type UnclaimedItem = {

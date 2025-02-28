@@ -1,13 +1,13 @@
-import { ItemVariant, UnclaimedItem } from "@/types";
-import { SeasonPassItem } from "./Item";
 import React from "react";
-import { SquarePlus, SquareMinus } from "lucide-react";
+import { SquareMinus, SquarePlus } from "lucide-react";
+import { ItemVariant, UnclaimedItem } from "@/types";
 import { useCollapse } from "./CollapseManager";
+import { SeasonPassItem } from "./Item";
 
 export const UnclaimedItemCategory = ({
   category,
   items,
-  variant = "item",
+  variant = "item"
 }: {
   category: string;
   items: UnclaimedItem[];
@@ -59,11 +59,11 @@ export const UnclaimedItemCategory = ({
 
   return (
     <div className="w-full">
-      <h3 className="text-xl uppercase flex items-center">
+      <h3 className="flex items-center text-xl uppercase">
         {category}
         <CollapseIcon
           strokeWidth={1}
-          className="cursor-pointer ml-2"
+          className="ml-2 cursor-pointer"
           onClick={() => {
             setIsCollapsed((prev) => !prev);
           }}
@@ -82,12 +82,16 @@ export const UnclaimedItemCategory = ({
           </>
         )}
       </p>
-      <hr className="border-t-2 border-gray-200 my-2" />
+      <hr className="my-2 border-t-2 border-gray-200" />
       {!isCollapsed && (
-        <div className="grid grid-cols-[repeat(auto-fit,64px)] md:grid-cols-[repeat(auto-fit,96px)] gap-x-4 gap-y-8 relative">
+        <div className="relative grid grid-cols-[repeat(auto-fit,64px)] gap-x-4 gap-y-8 md:grid-cols-[repeat(auto-fit,96px)]">
           {sortedItems.map((item) => (
             <SeasonPassItem
-              key={item.progressionHash + "-" + item.rewardItem.rewardItemIndex}
+              key={[
+                item.characterId,
+                item.progressionHash,
+                item.rewardItem.rewardItemIndex
+              ].join("-")}
               variant={variant}
               item={item}
             />

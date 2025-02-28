@@ -1,9 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot, Root } from "react-dom/client";
-import App from "./App.tsx";
+import { Toaster } from "sonner";
+import browser from "webextension-polyfill";
 import { BungieHttpClientProvider } from "@/components/providers/BungieHttpClientProvider";
 import { QueryClientProviderWrapper } from "@/components/providers/QueryClientProviderWrapper";
-import { Toaster } from "sonner";
+import App from "./App";
 
 function getInjectionTarget() {
   return document.querySelector(
@@ -13,7 +14,7 @@ function getInjectionTarget() {
 
 const logger = {
   log: console.log.bind(console, "[D2SeasonPassWaybackMachine]"),
-  error: console.error.bind(console, "[D2SeasonPassWaybackMachine]"),
+  error: console.error.bind(console, "[D2SeasonPassWaybackMachine]")
 };
 
 const app = document.createElement("div");
@@ -37,7 +38,7 @@ const observer = new MutationObserver(() => {
 });
 observer.observe(document.body, {
   childList: true,
-  subtree: true,
+  subtree: true
 });
 
 function injectContent() {
@@ -61,7 +62,7 @@ function injectContent() {
 
     observer.observe(document.body, {
       childList: true,
-      subtree: true,
+      subtree: true
     });
   }
 }
@@ -77,7 +78,7 @@ function insertIntoDom(target: Element) {
     link = document.createElement("link");
     link.id = stylesId;
     link.rel = "stylesheet";
-    link.href = chrome.runtime.getURL("assets/styles.css");
+    link.href = browser.runtime.getURL("assets/styles.css");
     link.onerror = () => {
       logger.error("Failed to load stylesheet");
     };
@@ -85,9 +86,10 @@ function insertIntoDom(target: Element) {
   }
 
   if (!root) {
-    logger.log("Creating root");
+    logger.log("Creating React root");
     root = createRoot(app);
   }
+
   root!.render(
     <StrictMode>
       <QueryClientProviderWrapper>

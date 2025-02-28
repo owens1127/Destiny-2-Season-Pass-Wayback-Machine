@@ -1,17 +1,18 @@
 import type { BungieHttpProtocol } from "bungie-net-core";
 import {
-  AllDestinyManifestComponents,
-  getDestinyManifestComponent,
-} from "bungie-net-core/manifest";
-import {
   getDestinyManifest,
   getLinkedProfiles,
-  getProfile,
+  getProfile
 } from "bungie-net-core/endpoints/Destiny2";
+import {
+  AllDestinyManifestComponents,
+  DestinyManifestLanguage,
+  getDestinyManifestComponent
+} from "bungie-net-core/manifest";
 import {
   BungieMembershipType,
   BungieNetResponse,
-  DestinyManifest,
+  DestinyManifest
 } from "bungie-net-core/models";
 import { getCookie } from "./cookie";
 
@@ -19,7 +20,7 @@ export class BungieHttpClient {
   private platformHttp: BungieHttpProtocol = async (config) => {
     const headers = new Headers({
       "x-csrf": getCookie("bungled"),
-      "X-API-Key": import.meta.env.VITE_BUNGIE_API_KEY!,
+      "X-API-Key": import.meta.env.VITE_BUNGIE_API_KEY!
     });
 
     if (config.contentType) {
@@ -39,7 +40,7 @@ export class BungieHttpClient {
       credentials: "include",
       method: config.method,
       headers,
-      body: config.body ? JSON.stringify(config.body) : undefined,
+      body: config.body ? JSON.stringify(config.body) : undefined
     });
 
     if (response.headers.get("Content-Type")?.includes("application/json")) {
@@ -47,14 +48,14 @@ export class BungieHttpClient {
 
       if (!response.ok) {
         throw new Error(data.Message, {
-          cause: data,
+          cause: data
         });
       }
 
       return data;
     } else {
       throw new Error(response.statusText, {
-        cause: response,
+        cause: response
       });
     }
   };
@@ -62,7 +63,7 @@ export class BungieHttpClient {
   private manifestComponentHttp: BungieHttpProtocol = async (config) => {
     const response = await fetch(config.baseUrl, {
       method: config.method,
-      body: config.body ? JSON.stringify(config.body) : undefined,
+      body: config.body ? JSON.stringify(config.body) : undefined
     });
 
     if (response.headers.get("Content-Type")?.includes("application/json")) {
@@ -70,14 +71,14 @@ export class BungieHttpClient {
 
       if (!response.ok) {
         throw new Error(data.message, {
-          cause: data,
+          cause: data
         });
       }
 
       return data;
     } else {
       throw new Error(response.statusText, {
-        cause: response,
+        cause: response
       });
     }
   };
@@ -92,17 +93,19 @@ export class BungieHttpClient {
     tableName: T,
     destinyManifest: DestinyManifest
   ) {
+    const lc = (new URLSearchParams(getCookie("bungleloc")).get("lc") ??
+      "en") as DestinyManifestLanguage;
     return await getDestinyManifestComponent(this.manifestComponentHttp, {
-      language: "en",
+      language: lc,
       tableName,
-      destinyManifest,
+      destinyManifest
     });
   }
 
   async getLinkedProfiles(bungieMembershipId: string) {
     return await getLinkedProfiles(this.platformHttp, {
       membershipId: bungieMembershipId,
-      membershipType: 254,
+      membershipType: 254
     }).then((res) => res.Response);
   }
 
@@ -113,7 +116,7 @@ export class BungieHttpClient {
     return await getProfile(this.platformHttp, {
       destinyMembershipId: params.destinyMembershipId,
       membershipType: params.membershipType,
-      components: [200, 202],
+      components: [200, 202]
     }).then((res) => res.Response);
   }
 
@@ -129,7 +132,7 @@ export class BungieHttpClient {
         "https://www.bungie.net/Platform/Destiny2/Actions/Seasons/ClaimReward/",
       method: "POST",
       contentType: "application/json",
-      body: params,
+      body: params
     });
 
     return response.Response;

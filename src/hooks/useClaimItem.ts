@@ -1,9 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
-import { useBungie } from "./useBungie";
-import { BungieHttpClient } from "@/lib/BungieClient";
+import { useBungie } from "@/components/providers/BungieHttpClientProvider";
 
 type ClaimRewardParams = Parameters<
-  BungieHttpClient["claimSeasonPassReward"]
+  ReturnType<typeof useBungie>["claimSeasonPassReward"]
 >[0];
 
 export const useClaimItem = (
@@ -16,7 +15,6 @@ export const useClaimItem = (
 
   return useMutation({
     mutationFn: (args: ClaimRewardParams) => bungie.claimSeasonPassReward(args),
-
-    ...opts,
+    ...opts
   });
 };
