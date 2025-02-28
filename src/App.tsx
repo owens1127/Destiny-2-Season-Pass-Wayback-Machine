@@ -6,16 +6,14 @@ import { useProfileProgressions } from "@/hooks/useDestinyCharacters";
 
 import { useDestinyManifestComponent } from "@/hooks/useDestinyManifestComponent";
 import { useDestinyMembership } from "@/hooks/useDestinyMembership";
-import { useToast } from "@/hooks/useToast";
 import { Suspense, useEffect } from "react";
+import { toast } from "sonner";
 
 export default function App() {
   // preloading
   useDestinyManifestComponent("DestinyActivityDefinition");
   useDestinyManifestComponent("DestinySeasonDefinition");
   useDestinyManifestComponent("DestinyInventoryItemLiteDefinition");
-
-  const { toast } = useToast();
 
   const membershipQuery = useDestinyMembership();
   const progressionsQueryQuery = useProfileProgressions(
@@ -32,30 +30,30 @@ export default function App() {
 
   useEffect(() => {
     if (membershipQuery.isError) {
-      toast({
-        title: "Error fetching membership data",
+      toast.error("Error fetching membership data", {
         description: membershipQuery.error.message,
-        variant: "destructive",
       });
     }
-  }, [toast, membershipQuery.isError, membershipQuery.error]);
+  }, [membershipQuery.isError, membershipQuery.error]);
 
   useEffect(() => {
     if (progressionsQueryQuery.isError) {
-      toast({
-        title: "Error fetching character data",
+      toast.error("Error fetching character data", {
         description: progressionsQueryQuery.error.message,
-        variant: "destructive",
       });
     }
-  }, [toast, progressionsQueryQuery.isError, progressionsQueryQuery.error]);
+  }, [progressionsQueryQuery.isError, progressionsQueryQuery.error]);
 
-  if (membershipQuery.isPending || progressionsQueryQuery.isPending) {
-    return <PageSkeleton />;
+  if (
+    membershipQuery.isPending ||
+    membershipQuery.isError ||
+    progressionsQueryQuery.isError
+  ) {
+    return null;
   }
 
-  if (membershipQuery.isError || progressionsQueryQuery.isError) {
-    return null;
+  if (progressionsQueryQuery.isPending) {
+    return <PageSkeleton />;
   }
 
   const profileProgressions = Object.values(
@@ -64,7 +62,7 @@ export default function App() {
   );
 
   return (
-    <Suspense>
+    <Suspense fallback={<PageSkeleton />}>
       <Main
         profileProgressions={profileProgressions}
         characters={progressionsQueryQuery.data.characters}

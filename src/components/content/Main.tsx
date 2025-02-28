@@ -5,7 +5,8 @@ import {
 } from "bungie-net-core/models";
 import { useDestinyManifestComponentsSuspended } from "@/hooks/useDestinyManifestComponent";
 import { UnclaimedItem } from "@/types";
-import { UnclaimedItemCategory } from "./UnclaimedItemCategory";
+import { UnclaimedItemCategory } from "./ItemCategory";
+import { CollapseManager } from "./CollapseManager";
 
 export const Main = React.memo(
   ({
@@ -68,10 +69,12 @@ export const Main = React.memo(
             .map((state, rewardIndex): UnclaimedItem => {
               const itemDef =
                 itemDefs.data[progressionDef.rewardItems[rewardIndex].itemHash];
+              const characterId =
+                characterMap[itemDef.classType] ?? primaryCharacter.characterId;
+
               return {
-                characterId:
-                  characterMap[itemDef.classType] ??
-                  primaryCharacter.characterId,
+                characterId,
+                characterClass: characters[characterId].classType,
                 membershipType: primaryCharacter.membershipType,
                 progressionHash: progression.progressionHash,
                 progressionDef,
@@ -144,171 +147,193 @@ export const Main = React.memo(
     } = useCategorizedItems(allUnclaimedItems);
 
     return (
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Unclaimed Rewards</h1>
-        <div className="flex flex-wrap gap-4">
-          <UnclaimedItemCategory
-            category="Glimmer"
-            items={glimmerItems}
-            variant="currency"
-          />
-          <UnclaimedItemCategory
-            category="Upgrade Modules"
-            items={upgradeModules}
-            variant="material"
-          />
-          <UnclaimedItemCategory
-            category="Enhancement Cores"
-            items={enhancementCores}
-            variant="material"
-          />
-          <UnclaimedItemCategory
-            category="Enhancement Prisms"
-            items={enhancementPrisms}
-            variant="material"
-          />
-          <UnclaimedItemCategory
-            category="Ascendant Shards"
-            items={ascendantShards}
-            variant="material"
-          />
-          <UnclaimedItemCategory
-            category="Ascendant Alloys"
-            items={ascendantAlloys}
-            variant="material"
-          />
-          <UnclaimedItemCategory
-            category="Deepsight Harmonizers"
-            items={deepsightHarmonizers}
-            variant="material"
-          />
-          <UnclaimedItemCategory
-            category="Exotic Ciphers"
-            items={exoticCiphers}
-            variant="material"
-          />
-          <UnclaimedItemCategory
-            category="Raid Banners"
-            items={raidBanners}
-            variant="material"
-          />
-          <UnclaimedItemCategory
-            category="Strange Coins"
-            items={strangeCoins}
-            variant="material"
-          />
-          <UnclaimedItemCategory
-            category="Seasonal Currencies"
-            items={seasonalCurrencies}
-            variant="material"
-          />
-          <UnclaimedItemCategory
-            category="Synthweaves"
-            items={synthweaves}
-            variant="material"
-          />
-          <UnclaimedItemCategory
-            category="Bright Dust"
-            items={brightDust}
-            variant="currency"
-          />
-          <UnclaimedItemCategory
-            category="Kinetic Weapons"
-            items={kineticWeapons}
-          />
-          <UnclaimedItemCategory
-            category="Energy Weapons"
-            items={energyWeapons}
-          />
-          <UnclaimedItemCategory
-            category="Power Weapons"
-            items={powerWeapons}
-          />
+      <div className="dark container mx-auto p-4 mb-8">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold mb-4">All Unclaimed Rewards</h1>
+          <p className="text-sm text-gray-400">
+            Powered by the Destiny 2 Season Pass Wayback Machine
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-8">
+          <CollapseManager>
+            <UnclaimedItemCategory
+              category="Glimmer"
+              items={glimmerItems}
+              variant="currency"
+            />
+            <UnclaimedItemCategory
+              category="Upgrade Modules"
+              items={upgradeModules}
+              variant="material"
+            />
+            <UnclaimedItemCategory
+              category="Enhancement Cores"
+              items={enhancementCores}
+              variant="material"
+            />
+            <UnclaimedItemCategory
+              category="Enhancement Prisms"
+              items={enhancementPrisms}
+              variant="material"
+            />
+            <UnclaimedItemCategory
+              category="Ascendant Shards"
+              items={ascendantShards}
+              variant="material"
+            />
+            <UnclaimedItemCategory
+              category="Ascendant Alloys"
+              items={ascendantAlloys}
+              variant="material"
+            />
+            <UnclaimedItemCategory
+              category="Deepsight Harmonizers"
+              items={deepsightHarmonizers}
+              variant="material"
+            />
+            <UnclaimedItemCategory
+              category="Exotic Ciphers"
+              items={exoticCiphers}
+              variant="material"
+            />
+            <UnclaimedItemCategory
+              category="Raid Banners"
+              items={raidBanners}
+              variant="material"
+            />
+            <UnclaimedItemCategory
+              category="Strange Coins"
+              items={strangeCoins}
+              variant="material"
+            />
+            <UnclaimedItemCategory
+              category="Seasonal Currencies"
+              items={seasonalCurrencies}
+              variant="material"
+            />
+            <UnclaimedItemCategory
+              category="Synthweaves"
+              items={synthweaves}
+              variant="material"
+            />
+            <UnclaimedItemCategory
+              category="Bright Dust"
+              items={brightDust}
+              variant="currency"
+            />
+            <UnclaimedItemCategory
+              category="Kinetic Weapons"
+              items={kineticWeapons}
+            />
+            <UnclaimedItemCategory
+              category="Energy Weapons"
+              items={energyWeapons}
+            />
+            <UnclaimedItemCategory
+              category="Power Weapons"
+              items={powerWeapons}
+            />
 
-          <UnclaimedItemCategory
-            category="Hunter Helmets"
-            items={hunterHelmets}
-          />
-          <UnclaimedItemCategory category="Hunter Grips" items={hunterArms} />
-          <UnclaimedItemCategory category="Hunter Vests" items={hunterChests} />
-          <UnclaimedItemCategory category="Hunter Strides" items={hunterLegs} />
-          <UnclaimedItemCategory
-            category="Hunter Cloaks"
-            items={hunterCloaks}
-          />
+            <UnclaimedItemCategory
+              category="Hunter Helmets"
+              items={hunterHelmets}
+            />
+            <UnclaimedItemCategory category="Hunter Grips" items={hunterArms} />
+            <UnclaimedItemCategory
+              category="Hunter Vests"
+              items={hunterChests}
+            />
+            <UnclaimedItemCategory
+              category="Hunter Strides"
+              items={hunterLegs}
+            />
+            <UnclaimedItemCategory
+              category="Hunter Cloaks"
+              items={hunterCloaks}
+            />
 
-          <UnclaimedItemCategory
-            category="Warlock Hoods"
-            items={warlockHelmets}
-          />
-          <UnclaimedItemCategory
-            category="Warlock Gloves"
-            items={warlockArms}
-          />
-          <UnclaimedItemCategory
-            category="Warlock Robes"
-            items={warlockRobes}
-          />
-          <UnclaimedItemCategory category="Warlock Boots" items={warlockLegs} />
-          <UnclaimedItemCategory
-            category="Warlock Bonds"
-            items={warlockBonds}
-          />
+            <UnclaimedItemCategory
+              category="Warlock Hoods"
+              items={warlockHelmets}
+            />
+            <UnclaimedItemCategory
+              category="Warlock Gloves"
+              items={warlockArms}
+            />
+            <UnclaimedItemCategory
+              category="Warlock Robes"
+              items={warlockRobes}
+            />
+            <UnclaimedItemCategory
+              category="Warlock Boots"
+              items={warlockLegs}
+            />
+            <UnclaimedItemCategory
+              category="Warlock Bonds"
+              items={warlockBonds}
+            />
 
-          <UnclaimedItemCategory
-            category="Titan Helmets"
-            items={titanHelmets}
-          />
-          <UnclaimedItemCategory category="Titan Gauntlets" items={titanArms} />
-          <UnclaimedItemCategory
-            category="Titan Chestplates"
-            items={titanChests}
-          />
-          <UnclaimedItemCategory category="Titan Greaves" items={titanLegs} />
-          <UnclaimedItemCategory category="Titan Marks" items={titanMarks} />
+            <UnclaimedItemCategory
+              category="Titan Helmets"
+              items={titanHelmets}
+            />
+            <UnclaimedItemCategory
+              category="Titan Gauntlets"
+              items={titanArms}
+            />
+            <UnclaimedItemCategory
+              category="Titan Chestplates"
+              items={titanChests}
+            />
+            <UnclaimedItemCategory category="Titan Greaves" items={titanLegs} />
+            <UnclaimedItemCategory category="Titan Marks" items={titanMarks} />
 
-          <UnclaimedItemCategory
-            category="Exotic Engrams"
-            items={exoticEngrams}
-            variant="engram"
-          />
-          <UnclaimedItemCategory
-            category="Legendary Engrams"
-            items={legendaryEngrams}
-            variant="engram"
-          />
-          <UnclaimedItemCategory
-            category="Seasonal Engrams"
-            items={seasonalEngrams}
-            variant="engram"
-          />
-          <UnclaimedItemCategory
-            category="Eververse Engrams"
-            items={eververseEngrams}
-            variant="engram"
-          />
+            <UnclaimedItemCategory
+              category="Exotic Engrams"
+              items={exoticEngrams}
+              variant="engram"
+            />
+            <UnclaimedItemCategory
+              category="Legendary Engrams"
+              items={legendaryEngrams}
+              variant="engram"
+            />
+            <UnclaimedItemCategory
+              category="Seasonal Engrams"
+              items={seasonalEngrams}
+              variant="engram"
+            />
+            <UnclaimedItemCategory
+              category="Eververse Engrams"
+              items={eververseEngrams}
+              variant="engram"
+            />
 
-          <UnclaimedItemCategory category="Ornaments" items={ornaments} />
+            <UnclaimedItemCategory category="Ornaments" items={ornaments} />
 
-          <UnclaimedItemCategory category="Shaders" items={shaders} />
-          <UnclaimedItemCategory category="Finishers" items={finishers} />
-          <UnclaimedItemCategory category="Emotes" items={emotes} />
-          <UnclaimedItemCategory category="Vehicles" items={vehicles} />
-          <UnclaimedItemCategory category="Ships" items={ships} />
-          <UnclaimedItemCategory category="Ghost Shells" items={ghostShells} />
-          <UnclaimedItemCategory
-            category="Ghost Projections"
-            items={projections}
-          />
-          <UnclaimedItemCategory
-            category="Transmat Effects"
-            items={transmats}
-          />
+            <UnclaimedItemCategory category="Shaders" items={shaders} />
+            <UnclaimedItemCategory category="Finishers" items={finishers} />
+            <UnclaimedItemCategory category="Emotes" items={emotes} />
+            <UnclaimedItemCategory category="Vehicles" items={vehicles} />
+            <UnclaimedItemCategory category="Ships" items={ships} />
+            <UnclaimedItemCategory
+              category="Ghost Shells"
+              items={ghostShells}
+            />
+            <UnclaimedItemCategory
+              category="Ghost Projections"
+              items={projections}
+            />
+            <UnclaimedItemCategory
+              category="Transmat Effects"
+              items={transmats}
+            />
 
-          <UnclaimedItemCategory
-            category="Uncategorized"
-            items={uncategorized}
-          />
+            <UnclaimedItemCategory
+              category="Uncategorized"
+              items={uncategorized}
+            />
+          </CollapseManager>
         </div>
       </div>
     );

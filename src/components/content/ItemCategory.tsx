@@ -1,6 +1,8 @@
 import { ItemVariant, UnclaimedItem } from "@/types";
-import { SeasonPassItem } from "./SeasonPassItem";
+import { SeasonPassItem } from "./Item";
 import React from "react";
+import { SquarePlus, SquareMinus } from "lucide-react";
+import { useCollapse } from "./CollapseManager";
 
 export const UnclaimedItemCategory = ({
   category,
@@ -11,6 +13,8 @@ export const UnclaimedItemCategory = ({
   items: UnclaimedItem[];
   variant?: ItemVariant;
 }) => {
+  const [isCollapsed, setIsCollapsed] = useCollapse(category);
+
   const sortedItems = React.useMemo(() => {
     if (variant === "currency" || variant === "material") {
       return items.toSorted((a, b) => {
@@ -35,8 +39,6 @@ export const UnclaimedItemCategory = ({
         (a, b) => b.seasonDef.seasonNumber - a.seasonDef.seasonNumber
       );
     }
-
-    return items;
   }, [items, variant]);
 
   if (items.length === 0) {
@@ -53,9 +55,20 @@ export const UnclaimedItemCategory = ({
     variant === "currency" ||
     (variant === "material" && totalQuantity !== itemCount);
 
+  const CollapseIcon = isCollapsed ? SquarePlus : SquareMinus;
+
   return (
     <div className="w-full">
-      <h3 className="text-xl uppercase"> {category}</h3>
+      <h3 className="text-xl uppercase flex items-center">
+        {category}
+        <CollapseIcon
+          strokeWidth={1}
+          className="cursor-pointer ml-2"
+          onClick={() => {
+            setIsCollapsed((prev) => !prev);
+          }}
+        />
+      </h3>
       <p className="text-md text-gray-200">
         <span className="font-semibold">{itemCount.toLocaleString()}</span> item
         {itemCount === 1 ? "" : "s"}
@@ -69,16 +82,18 @@ export const UnclaimedItemCategory = ({
           </>
         )}
       </p>
-      <hr className="border-t-2 border-gray-300 my-2" />
-      <div className="grid grid-cols-[repeat(auto-fit,96px)] gap-4 relative">
-        {sortedItems.map((item) => (
-          <SeasonPassItem
-            key={item.progressionHash + "-" + item.rewardItem.rewardItemIndex}
-            variant={variant}
-            item={item}
-          />
-        ))}
-      </div>
+      <hr className="border-t-2 border-gray-200 my-2" />
+      {!isCollapsed && (
+        <div className="grid grid-cols-[repeat(auto-fit,64px)] md:grid-cols-[repeat(auto-fit,96px)] gap-x-4 gap-y-8 relative">
+          {sortedItems.map((item) => (
+            <SeasonPassItem
+              key={item.progressionHash + "-" + item.rewardItem.rewardItemIndex}
+              variant={variant}
+              item={item}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

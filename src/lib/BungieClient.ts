@@ -5,6 +5,7 @@ import {
 } from "bungie-net-core/manifest";
 import {
   getDestinyManifest,
+  getLinkedProfiles,
   getProfile,
 } from "bungie-net-core/endpoints/Destiny2";
 import {
@@ -12,16 +13,7 @@ import {
   BungieNetResponse,
   DestinyManifest,
 } from "bungie-net-core/models";
-import { getMembershipDataForCurrentUser } from "bungie-net-core/endpoints/User";
-
-const getCookie = (name: string) => {
-  return (
-    document.cookie
-      .split("; ")
-      .find((cookie) => cookie.startsWith(`${name}=`))
-      ?.split("=")[1] ?? ""
-  );
-};
+import { getCookie } from "./cookie";
 
 export class BungieHttpClient {
   private platformHttp: BungieHttpProtocol = async (config) => {
@@ -32,6 +24,12 @@ export class BungieHttpClient {
 
     if (config.contentType) {
       headers.set("Content-Type", config.contentType);
+    }
+
+    const searchParams = new URLSearchParams(config.searchParams);
+    const locParams = new URLSearchParams(getCookie("bungleloc"));
+    for (const [key, value] of locParams) {
+      searchParams.append(key, value);
     }
 
     const url =
@@ -101,10 +99,11 @@ export class BungieHttpClient {
     });
   }
 
-  async getMembershipData() {
-    return await getMembershipDataForCurrentUser(this.platformHttp).then(
-      (res) => res.Response
-    );
+  async getLinkedProfiles(bungieMembershipId: string) {
+    return await getLinkedProfiles(this.platformHttp, {
+      membershipId: bungieMembershipId,
+      membershipType: 254,
+    }).then((res) => res.Response);
   }
 
   async getProfileProgressions(params: {

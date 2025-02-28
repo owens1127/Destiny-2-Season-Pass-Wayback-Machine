@@ -1,62 +1,61 @@
 import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import { createRoot, Root } from "react-dom/client";
 import App from "./App.tsx";
-import { ThemeProvider } from "@/components/providers/ThemeProvider.tsx";
 import { BungieHttpClientProvider } from "@/components/providers/BungieHttpClientProvider";
 import { QueryClientProviderWrapper } from "@/components/providers/QueryClientProviderWrapper";
-import { Toaster } from "@/components/providers/Toaster";
+import { Toaster } from "sonner";
 
-const containerId = "__season-pass-wayback-root";
-
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.action === "inject") {
-    injectContent();
-  } else if (message.action === "remove") {
-    document.getElementById(containerId)?.remove();
-  }
-});
-
-function getTarget() {
+function getInjectionTarget() {
   return document.querySelector(
     "[class^='SeasonPassRewardProgression_stepWrapper']"
   );
 }
 
-function injectContent() {
+const logger = {
+  log: console.log.bind(console, "[D2SeasonPassWaybackMachine]"),
+  error: console.error.bind(console, "[D2SeasonPassWaybackMachine]"),
+};
+
+const app = document.createElement("div");
+app.id = "Destiny2-SeasonPass-Wayback-Machine--Root";
+document.body.appendChild(app);
+
+let isInjecting = false;
+injectContent();
+
+const observer = new MutationObserver(() => {
   if (
-    !/:\/\/www\.bungie\.net\/7\/([^/]+\/)?Seasons\//.test(window.location.href)
+    !isInjecting &&
+    /:\/\/www\.bungie\.net\/7\/([^/]+\/)?Seasons\//.test(
+      window.location.href
+    ) &&
+    !document.body.contains(app)
   ) {
-    return;
+    logger.log("Container removed from DOM, re-injecting");
+    injectContent();
   }
+});
+observer.observe(document.body, {
+  childList: true,
+  subtree: true,
+});
 
-  if (document.getElementById(containerId)) {
-    return;
-  }
+function injectContent() {
+  logger.log("Attempting to inject content and styles");
+  isInjecting = true;
 
-  const container = document.createElement("div");
-  container.id = containerId;
-  document.body.appendChild(container);
-
-  console.log("[D2SeasonPassWaybackMachine] Injecting script and styles...");
-
-  const target = getTarget();
+  const target = getInjectionTarget();
   if (target) {
-    console.log(
-      "[D2SeasonPassWaybackMachine] Target exists, injecting content..."
-    );
-    insertIntoDom(target, container);
+    logger.log("Target exists, injecting content");
+    insertIntoDom(target);
   } else {
-    console.log(
-      "[D2SeasonPassWaybackMachine] Target not found, waiting for mutations..."
-    );
+    logger.log("Target not found, waiting for mutations");
     const observer = new MutationObserver((_, obs) => {
-      const target = getTarget();
+      const target = getInjectionTarget();
       if (target) {
-        console.log(
-          "[D2SeasonPassWaybackMachine] Target found, injecting content..."
-        );
+        logger.log("Target found, injecting content");
         obs.disconnect();
-        insertIntoDom(target, container);
+        insertIntoDom(target);
       }
     });
 
@@ -67,39 +66,40 @@ function injectContent() {
   }
 }
 
-function insertIntoDom(target: Element, container: HTMLDivElement) {
-  target.insertAdjacentElement("afterend", container);
+let root: Root | null = null;
 
-  let link = document.getElementById(
-    "__season-pass-wayback-styles"
-  ) as HTMLLinkElement | null;
+function insertIntoDom(target: Element) {
+  target.insertAdjacentElement("afterend", app);
+
+  const stylesId = "Destiny2-SeasonPass-Wayback-Machine--Styles";
+  let link = document.getElementById(stylesId) as HTMLLinkElement | null;
   if (!link) {
     link = document.createElement("link");
-    link.id = "__season-pass-wayback-styles";
+    link.id = stylesId;
     link.rel = "stylesheet";
     link.href = chrome.runtime.getURL("assets/styles.css");
-    link.onload = () => {
-      console.log(
-        "[D2SeasonPassWaybackMachine] Stylesheet successfully loaded."
-      );
-    };
     link.onerror = () => {
-      console.error("[D2SeasonPassWaybackMachine] Failed to load styles.css.");
+      logger.error("Failed to load stylesheet");
     };
+    document.head.appendChild(link);
   }
-  document.head.appendChild(link);
 
-  console.log("[D2SeasonPassWaybackMachine] Creating root...");
-  createRoot(container).render(
+  if (!root) {
+    logger.log("Creating root");
+    root = createRoot(app);
+  }
+  root!.render(
     <StrictMode>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <QueryClientProviderWrapper>
-          <BungieHttpClientProvider>
-            <App />
-            <Toaster />
-          </BungieHttpClientProvider>
-        </QueryClientProviderWrapper>
-      </ThemeProvider>
+      <QueryClientProviderWrapper>
+        <BungieHttpClientProvider>
+          <App />
+          <Toaster richColors duration={7777} />
+        </BungieHttpClientProvider>
+      </QueryClientProviderWrapper>
     </StrictMode>
   );
+
+  logger.log("Content successfully injected");
+
+  isInjecting = false;
 }

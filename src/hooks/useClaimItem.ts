@@ -16,6 +16,7 @@ export const useClaimItem = (
 
   return useMutation({
     mutationFn: (args: ClaimRewardParams) => bungie.claimSeasonPassReward(args),
+
     ...opts,
   });
 };
