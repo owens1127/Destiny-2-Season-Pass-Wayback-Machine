@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "tsc -b && vite build && mv build/src/popup.html build/",
-    "zip": "zip -r build.zip build/*",
+    "zip:chrome": "zip -r chrome.zip build/*",
+    "zip:firefox": "cd build && zip -r ../firefox.zip .",
     "lint": "eslint .",
     "format": "prettier --write .",
     "preview": "vite preview"

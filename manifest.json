@@ -21,5 +21,10 @@
       "matches": ["*://www.bungie.net/*"],
       "resources": ["assets/styles.css"]
     }
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "d2seasonpasswaybackmachine@id.com"
+    }
+  }
 }
