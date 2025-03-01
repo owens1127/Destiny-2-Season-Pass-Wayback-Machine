@@ -6,11 +6,15 @@
   "icons": {
     "128": "assets/icon.png"
   },
+  "permissions": [],
   "host_permissions": ["*://www.bungie.net/*"],
+  "action": {
+    "default_popup": "popup.html"
+  },
   "content_scripts": [
     {
       "matches": ["*://www.bungie.net/*"],
-      "js": ["assets/content.js"]
+      "js": ["content.js"]
     }
   ],
   "web_accessible_resources": [

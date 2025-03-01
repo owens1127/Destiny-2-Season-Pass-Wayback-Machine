@@ -1,5 +1,5 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { useBungie } from "@/components/providers/BungieHttpClientProvider";
+import { useBungie } from "@/app/components/providers/BungieHttpClientProvider";
 
 export const useDestinyManifest = () => {
   const bungie = useBungie();

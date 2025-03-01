@@ -2,9 +2,9 @@ import { StrictMode } from "react";
 import { createRoot, Root } from "react-dom/client";
 import { Toaster } from "sonner";
 import browser from "webextension-polyfill";
-import { BungieHttpClientProvider } from "@/components/providers/BungieHttpClientProvider";
-import { QueryClientProviderWrapper } from "@/components/providers/QueryClientProviderWrapper";
-import App from "./App";
+import App from "@/app/App";
+import { BungieHttpClientProvider } from "@/app/components/providers/BungieHttpClientProvider";
+import { QueryClientProviderWrapper } from "@/app/components/providers/QueryClientProviderWrapper";
 
 function getInjectionTarget() {
   return document.querySelector(

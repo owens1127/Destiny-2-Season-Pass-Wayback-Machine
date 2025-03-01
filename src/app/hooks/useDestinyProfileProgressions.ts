@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { BungieMembershipType } from "bungie-net-core/models";
-import { useBungie } from "@/components/providers/BungieHttpClientProvider";
+import { useBungie } from "@/app/components/providers/BungieHttpClientProvider";
 
 export const useProfileProgressions = (params: {
   destinyMembershipId: string;

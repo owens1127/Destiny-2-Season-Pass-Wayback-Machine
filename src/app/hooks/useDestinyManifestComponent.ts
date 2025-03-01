@@ -7,7 +7,7 @@ import {
   AllDestinyManifestComponents,
   DestinyManifestDefinition
 } from "bungie-net-core/manifest";
-import { useBungie } from "@/components/providers/BungieHttpClientProvider";
+import { useBungie } from "@/app/components/providers/BungieHttpClientProvider";
 import {
   useDestinyManifest,
   useDestinyManifestSuspended

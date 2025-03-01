@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && mv build/src/popup.html build/",
+    "zip": "zip -r build.zip build/*",
     "lint": "eslint .",
     "format": "prettier --write .",
     "preview": "vite preview"

@@ -1,7 +1,7 @@
 import React from "react";
 import { toast } from "sonner";
-import { useClaimItem } from "@/hooks/useClaimItem";
-import { cn } from "@/lib/utils";
+import { useClaimItem } from "@/app/hooks/useClaimItem";
+import { cn } from "@/app/lib/utils";
 import { ItemVariant, UnclaimedItem } from "@/types";
 
 const classNameMap = {

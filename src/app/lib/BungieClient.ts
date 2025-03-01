@@ -34,7 +34,7 @@ export class BungieHttpClient {
     const url = config.baseUrl + `?${params}`;
 
     const response = await fetch(url, {
-      credentials: "include",
+      credentials: "same-origin",
       method: config.method,
       headers,
       body: config.body ? JSON.stringify(config.body) : undefined

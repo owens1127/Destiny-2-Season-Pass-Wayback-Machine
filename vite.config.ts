@@ -28,15 +28,18 @@ export default defineConfig({
   },
   build: {
     outDir: "build",
+    minify: false,
+    target: ["chrome111", "firefox110"],
     rollupOptions: {
       input: {
         content: path.resolve(__dirname, "src/content.tsx"),
-        styles: path.resolve(__dirname, "src/styles.css")
+        styles: path.resolve(__dirname, "src/styles.css"),
+        popup: path.resolve(__dirname, "src/popup.html")
       },
       output: {
-        entryFileNames: "assets/[name].js",
-        chunkFileNames: "assets/[name].js",
-        assetFileNames: "assets/[name].[ext]"
+        entryFileNames: "[name].js",
+        assetFileNames: "assets/[name].[ext]",
+        chunkFileNames: "assets/[name].js"
       }
     }
   }

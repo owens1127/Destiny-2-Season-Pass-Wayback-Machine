@@ -3,7 +3,7 @@ import {
   DestinyCharacterComponent,
   DestinyProgression
 } from "bungie-net-core/models";
-import { useDestinyManifestComponentsSuspended } from "@/hooks/useDestinyManifestComponent";
+import { useDestinyManifestComponentsSuspended } from "@/app/hooks/useDestinyManifestComponent";
 import { UnclaimedItem } from "@/types";
 import { CollapseManager } from "./CollapseManager";
 import { UnclaimedItemCategory } from "./ItemCategory";

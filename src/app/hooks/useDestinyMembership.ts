@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useBungie } from "@/components/providers/BungieHttpClientProvider";
-import { getCookie } from "@/lib/cookie";
+import { useBungie } from "@/app/components/providers/BungieHttpClientProvider";
+import { getCookie } from "@/app/lib/cookie";
 
 export const useDestinyMembership = () => {
   const bungie = useBungie();

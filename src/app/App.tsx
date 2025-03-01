@@ -2,11 +2,11 @@
 
 import { Suspense, useEffect } from "react";
 import { toast } from "sonner";
-import { Main } from "@/components/content/Main";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useDestinyManifestComponent } from "@/hooks/useDestinyManifestComponent";
-import { useDestinyMembership } from "@/hooks/useDestinyMembership";
-import { useProfileProgressions } from "@/hooks/useDestinyProfileProgressions";
+import { Main } from "@/app/components/content/Main";
+import { Skeleton } from "@/app/components/ui/skeleton";
+import { useDestinyManifestComponent } from "@/app/hooks/useDestinyManifestComponent";
+import { useDestinyMembership } from "@/app/hooks/useDestinyMembership";
+import { useProfileProgressions } from "@/app/hooks/useDestinyProfileProgressions";
 
 export default function App() {
   // preloading
