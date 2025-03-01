@@ -7,7 +7,6 @@
     "128": "assets/icon.png"
   },
   "permissions": [],
-  "host_permissions": ["*://www.bungie.net/*"],
   "action": {
     "default_popup": "popup.html"
   },
