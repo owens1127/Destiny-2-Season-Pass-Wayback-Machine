@@ -37,7 +37,7 @@ export const SeasonPassItem = React.memo(
     return (
       <div
         className={cn(
-          "group relative flex h-14 w-14 cursor-pointer flex-col items-center rounded-[0.125rem] border-2 border-gray-500 md:h-20 md:w-20",
+          "group relative flex h-14 w-14 cursor-pointer flex-col items-center rounded-[0.125rem] border-2 border-gray-500 transition-[scale] md:h-20 md:w-20",
           {
             "hover:scale-[1.03]": !isClaimed,
             "opacity-50": isClaimed,
@@ -85,8 +85,7 @@ export const SeasonPassItem = React.memo(
             alt=""
           />
         )}
-
-        <div className="max-h:full bottom-[90%] mb-1 max-w-full rounded bg-black/95 p-3 text-white opacity-0 group-hover:absolute group-hover:max-h-none group-hover:max-w-none group-hover:min-w-[150%] group-hover:opacity-100">
+        <div className="bottom-[90%] mb-1 hidden min-w-[150%] rounded bg-black/95 p-3 text-white group-hover:absolute group-hover:block">
           <p className="text-lg text-nowrap">
             {item.itemDef.displayProperties.name}
           </p>
@@ -97,7 +96,6 @@ export const SeasonPassItem = React.memo(
             {`Rank ${item.rewardItem.rewardedAtProgressionLevel}`}
           </p>
         </div>
-
         {isShowQuantity && (
           <div
             className={cn(

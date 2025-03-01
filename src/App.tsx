@@ -4,9 +4,9 @@ import { Suspense, useEffect } from "react";
 import { toast } from "sonner";
 import { Main } from "@/components/content/Main";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useProfileProgressions } from "@/hooks/useDestinyCharacters";
 import { useDestinyManifestComponent } from "@/hooks/useDestinyManifestComponent";
 import { useDestinyMembership } from "@/hooks/useDestinyMembership";
+import { useProfileProgressions } from "@/hooks/useDestinyProfileProgressions";
 
 export default function App() {
   // preloading

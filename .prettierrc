@@ -2,8 +2,8 @@
   "trailingComma": "none",
   "semi": true,
   "plugins": [
-    "prettier-plugin-tailwindcss",
-    "@ianvs/prettier-plugin-sort-imports"
+    "@ianvs/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss"
   ],
   "importOrder": [
     "^(react/(.*)$)|^(react$)|^(react-native(.*)$)",

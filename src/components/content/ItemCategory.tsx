@@ -22,7 +22,14 @@ export const UnclaimedItemCategory = ({
         if (diff) {
           return diff;
         }
-        return b.seasonDef.seasonNumber - a.seasonDef.seasonNumber;
+        const diff2 = b.seasonDef.seasonNumber - a.seasonDef.seasonNumber;
+        if (diff2) {
+          return diff2;
+        }
+        return (
+          b.rewardItem.rewardedAtProgressionLevel -
+          a.rewardItem.rewardedAtProgressionLevel
+        );
       });
     } else if (variant === "item") {
       return items.toSorted((a, b) => {
@@ -32,12 +39,29 @@ export const UnclaimedItemCategory = ({
         if (diff) {
           return diff;
         }
-        return b.seasonDef.seasonNumber - a.seasonDef.seasonNumber;
+        const diff2 = b.seasonDef.seasonNumber - a.seasonDef.seasonNumber;
+        if (diff2) {
+          return diff2;
+        }
+        const diff3 =
+          b.rewardItem.rewardedAtProgressionLevel -
+          a.rewardItem.rewardedAtProgressionLevel;
+        if (diff3) {
+          return diff3;
+        }
+        return a.characterClass - b.characterClass;
       });
     } else {
-      return items.toSorted(
-        (a, b) => b.seasonDef.seasonNumber - a.seasonDef.seasonNumber
-      );
+      return items.toSorted((a, b) => {
+        const diff = b.seasonDef.seasonNumber - a.seasonDef.seasonNumber;
+        if (diff) {
+          return diff;
+        }
+        return (
+          b.rewardItem.rewardedAtProgressionLevel -
+          a.rewardItem.rewardedAtProgressionLevel
+        );
+      });
     }
   }, [items, variant]);
 
@@ -71,7 +95,7 @@ export const UnclaimedItemCategory = ({
       </h3>
       <p className="text-md text-gray-200">
         <span className="font-semibold">
-          {itemCount.toLocaleString() + "item(s)"}
+          {`${itemCount.toLocaleString()} item(s)`}
         </span>
         {isShowQuantity && (
           <>

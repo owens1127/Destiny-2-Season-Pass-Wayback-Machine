@@ -11,18 +11,15 @@ export const useProfileProgressions = (params: {
   return useQuery({
     enabled: params.destinyMembershipId !== "",
     queryKey: [
-      "getBasicProfile",
+      "destinyProfileProgressions",
       params.membershipType,
       params.destinyMembershipId
     ],
-    queryFn: () =>
-      bungie.getProfileProgressions({
-        destinyMembershipId: params.destinyMembershipId,
-        membershipType: params.membershipType
-      }),
+    queryFn: () => bungie.getProfileProgressions(params),
     select: (data) => ({
       characters: data.characters.data!,
       profileProgressions: data.characterProgressions.data!
-    })
+    }),
+    staleTime: 60_000
   });
 };
