@@ -1,6 +1,25 @@
 # Destiny 2 Season Pass Wayback Machine
 
-### by Newo
+## Installling the extension (unpacked)
+
+If you want to install the extension from source, you can do so by following these steps.
+
+### Chrome
+
+- Download the `build.zip` file from the [releases page](https://github.com/owens1127/Destiny-2-Season-Pass-Wayback-Machine/releases/latest)
+- Extract the `build.zip` file to a folder on your computer.
+- Open Chrome and go to the URL `chrome://extensions/`.
+- Enable "Developer mode" by toggling the switch in the top right corner.
+- Click the "Load unpacked" button.
+- Select the folder where you extracted the zip file.
+
+### Firefox
+
+- Download the `build.zip` file from the [releases page](https://github.com/owens1127/Destiny-2-Season-Pass-Wayback-Machine/releases/latest)
+- Extract the `build.zip` file to a folder on your computer.
+- Open Firefox and go to the URL `about:debugging#/runtime/this-firefox`.
+- Click the "Load Temporary Add-on" button.
+- Select the `manifest.json` file from the folder where you extracted the zip file.
 
 ## How it works
 
@@ -8,7 +27,7 @@
 2. Sign into [Bungie.net](https://www.bungie.net/7/en/Seasons/Progress).
 3. Click your profile icon in the top right.
 4. Click the **"Season Pass Progress"** tab.
-5. Scroll down the page a bit.
+5. Scroll down the page a bit.\*
 
 This extension will automatically inject an additional user interface below the existing one. This new interface groups all your unclaimed season pass rewards that are currently available in the API. You can click on each reward to claim it.
 
