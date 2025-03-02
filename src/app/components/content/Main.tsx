@@ -56,6 +56,23 @@ export const Main = React.memo(
         .sort((a, b) => b.seasonDef.seasonNumber - a.seasonDef.seasonNumber);
     }, [profileProgressions, progressionDefs.data, seasonDefs.data]);
 
+    const earliestVisibileSeason = React.useMemo(
+      () =>
+        seasonProgressions.sort(
+          (a, b) => a.seasonDef.seasonNumber - b.seasonDef.seasonNumber
+        )[0].seasonDef,
+      [seasonProgressions]
+    );
+    const earliestVisibileSeasonStartDate = earliestVisibileSeason.startDate
+      ? new Date(earliestVisibileSeason.startDate).toLocaleDateString(
+          undefined,
+          {
+            year: "numeric",
+            month: "long"
+          }
+        )
+      : "Unknown";
+
     const allUnclaimedItems = React.useMemo(() => {
       const characterMap = Object.fromEntries(
         Object.entries(characters).map(
@@ -105,11 +122,11 @@ export const Main = React.memo(
       <div className="dark container mx-auto mb-8 p-4">
         <div className="mb-6">
           <h1 className="mb-4 text-2xl font-bold">All Unclaimed Rewards</h1>
-          <p className="text-sm text-gray-400">
+          <p className="mb-2 text-sm text-gray-400">
             Powered by the Destiny 2 Season Pass Wayback Machine
           </p>
-          <p className="text-sm text-gray-400">
-            {`Rewards available from: ${1} (${seasonProgressions.length} seasons)`}
+          <p className="text-sm text-gray-400 italic">
+            {`Unfortunately, some season pass data from older seasons has been deleted from the Bungie API. The extension can only pull data from seasons as far back as ${earliestVisibileSeason.displayProperties.name} (${earliestVisibileSeasonStartDate}).`}
           </p>
         </div>
         <div className="flex flex-wrap gap-8">
