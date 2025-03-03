@@ -1,6 +1,6 @@
-import { AllDestinyManifestComponents } from "bungie-net-core/manifest";
 import {
   DestinyClass,
+  DestinyInventoryItemDefinition,
   DestinyProgressionDefinition,
   DestinyProgressionRewardItemQuantity,
   DestinyProgressionRewardItemSocketOverrideState,
@@ -16,7 +16,7 @@ export type UnclaimedItem = {
   progressionDef: DestinyProgressionDefinition;
   rewardItem: DestinyProgressionRewardItemQuantity;
   rewardItemSocketOverrideStates: DestinyProgressionRewardItemSocketOverrideState;
-  itemDef: AllDestinyManifestComponents["DestinyInventoryItemLiteDefinition"];
+  itemDef: DestinyInventoryItemDefinition;
   seasonDef: DestinySeasonDefinition;
   state: DestinyProgressionRewardItemState;
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import {
   DestinyCharacterComponent,
+  DestinyClass,
   DestinyProgression
 } from "bungie-net-core/models";
 import { useDestinyManifestComponentsSuspended } from "@/app/hooks/useDestinyManifestComponent";
@@ -20,7 +21,7 @@ export const Main = React.memo(
       useDestinyManifestComponentsSuspended([
         "DestinySeasonDefinition",
         "DestinyProgressionDefinition",
-        "DestinyInventoryItemLiteDefinition"
+        "DestinyInventoryItemDefinition"
       ]);
 
     const primaryCharacter = Object.values(characters).sort(
@@ -80,18 +81,37 @@ export const Main = React.memo(
         )
       );
 
+      const classCategoryIdentifierRegex =
+        /armor_skins_(titan|hunter|warlock)_/;
+      const classRegexMapping: Record<string, DestinyClass> = {
+        titan: 0,
+        hunter: 1,
+        warlock: 2
+      };
+
       return seasonProgressions.flatMap(
         ({ progression, progressionDef, seasonDef }) =>
           progression.rewardItemStates
             .map((state, rewardIndex): UnclaimedItem => {
               const itemDef =
                 itemDefs.data[progressionDef.rewardItems[rewardIndex].itemHash];
+
+              const matchClassCategory =
+                itemDef.plug?.plugCategoryIdentifier?.match(
+                  classCategoryIdentifierRegex
+                );
+
+              const characterClass =
+                itemDef.classType !== 3
+                  ? itemDef.classType
+                  : (classRegexMapping[matchClassCategory?.[1] ?? ""] ?? 3);
+
               const characterId =
-                characterMap[itemDef.classType] ?? primaryCharacter.characterId;
+                characterMap[characterClass] ?? primaryCharacter.characterId;
 
               return {
                 characterId,
-                characterClass: characters[characterId].classType,
+                characterClass,
                 membershipType: primaryCharacter.membershipType,
                 progressionHash: progression.progressionHash,
                 progressionDef,
