@@ -9,7 +9,7 @@ const classNameMap = {
   0: "Titan",
   1: "Hunter",
   2: "Warlock",
-  3: "Unknown"
+  3: "Account"
 };
 
 export const SeasonPassItem = React.memo(
