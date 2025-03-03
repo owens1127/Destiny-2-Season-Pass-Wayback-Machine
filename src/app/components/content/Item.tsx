@@ -17,6 +17,11 @@ export const SeasonPassItem = React.memo(
 
     const quantity = item.rewardItem.quantity;
     const isShowQuantity = variant === "currency" || variant === "material";
+    const isDeepsight =
+      variant === "item" &&
+      item.rewardItem.socketOverrides.some(
+        (socket) => socket.overrideSingleItemHash === 213377779
+      );
 
     const claimItemMutation = useClaimItem({
       onError: (error) => {
@@ -39,6 +44,7 @@ export const SeasonPassItem = React.memo(
         className={cn(
           "group relative flex h-14 w-14 cursor-pointer flex-col items-center rounded-[0.125rem] border-2 border-gray-500 transition-[scale] md:h-20 md:w-20",
           {
+            "border-2 border-red-600/75": isDeepsight,
             "hover:scale-[1.03]": !isClaimed,
             "opacity-50": isClaimed,
             grayscale: isClaimed

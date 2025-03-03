@@ -71,5 +71,5 @@ export default function App() {
 }
 
 const PageSkeleton = () => {
-  return <Skeleton className="h-96 w-full" />;
+  return <Skeleton className="h-96 w-full bg-gray-400/25" />;
 };
