@@ -44,7 +44,7 @@ export class BungieHttpClient {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.Message, {
+        throw new Error(`${data.ErrorStatus}: ${data.Message}`, {
           cause: data
         });
       }

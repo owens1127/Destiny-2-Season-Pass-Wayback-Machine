@@ -20,7 +20,7 @@ export const SeasonPassItem = React.memo(
 
     const claimItemMutation = useClaimItem({
       onError: (error) => {
-        toast.error("Error claiming item", {
+        toast.error("Error Claiming Item", {
           description: error.message
         });
       },
