@@ -10,8 +10,8 @@ import {
 } from "bungie-net-core/models";
 
 export type UnclaimedItem = {
-  character: DestinyCharacterComponent;
-  characterClass: DestinyClass;
+  transferCharacter: DestinyCharacterComponent;
+  itemCharacterClass: DestinyClass;
   membershipType: number;
   progressionHash: number;
   progressionDef: DestinyProgressionDefinition;

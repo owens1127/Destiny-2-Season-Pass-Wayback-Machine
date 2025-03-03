@@ -110,8 +110,8 @@ export const Main = React.memo(
                 characterMap[characterClass] ?? primaryCharacter;
 
               return {
-                character: characterComponent,
-                characterClass,
+                transferCharacter: characterComponent,
+                itemCharacterClass: characterClass,
                 membershipType: primaryCharacter.membershipType,
                 progressionHash: progression.progressionHash,
                 progressionDef,
@@ -124,8 +124,10 @@ export const Main = React.memo(
               };
             })
             .filter(({ state }) => {
-              // the bitmap for the item must be earned (2), but not claimed (4)
-              return (state & 2) === 2 && (state & 4) !== 4;
+              // the bitmap for the item must be earned (2) and claimable (8) or invisible (1)
+              return (
+                (state & 2) === 2 && ((state & 1) === 1 || (state & 8) === 8)
+              );
             })
       );
     }, [characters, itemDefs.data, primaryCharacter, seasonProgressions]);

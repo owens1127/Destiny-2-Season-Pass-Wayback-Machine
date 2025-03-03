@@ -49,7 +49,7 @@ export const UnclaimedItemCategory = ({
         if (diff3) {
           return diff3;
         }
-        return a.characterClass - b.characterClass;
+        return a.itemCharacterClass - b.itemCharacterClass;
       });
     } else {
       return items.toSorted((a, b) => {
