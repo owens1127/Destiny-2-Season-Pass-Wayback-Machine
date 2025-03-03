@@ -25,8 +25,8 @@ export const SeasonPassItem = React.memo(
         (socket) => socket.overrideSingleItemHash === 213377779
       );
     const isClaimableByCharacter =
-      item.characterClass === 3 ||
-      item.characterClass === item.character.classType;
+      item.itemCharacterClass === 3 ||
+      item.itemCharacterClass === item.transferCharacter.classType;
 
     const claimItemMutation = useClaimItem({
       onError: (error) => {
@@ -37,7 +37,7 @@ export const SeasonPassItem = React.memo(
       onSuccess: () => {
         toast.success("Item claimed", {
           description: `${quantity} ${item.itemDef.displayProperties.name} has been transferred to the inventory of your ${
-            classNameMap[item.characterClass]
+            classNameMap[item.transferCharacter.classType]
           }`
         });
         setIsClaimed(true);
@@ -46,7 +46,7 @@ export const SeasonPassItem = React.memo(
 
     const handleClaimItem = () => {
       claimItemMutation.mutate({
-        characterId: item.character.characterId,
+        characterId: item.transferCharacter.characterId,
         membershipType: item.membershipType,
         rewardIndex: item.rewardItem.rewardItemIndex,
         seasonHash: item.seasonDef.hash,

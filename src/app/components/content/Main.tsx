@@ -110,8 +110,8 @@ export const Main = React.memo(
                 characterMap[characterClass] ?? primaryCharacter;
 
               return {
-                character: characterComponent,
-                characterClass,
+                transferCharacter: characterComponent,
+                itemCharacterClass: characterClass,
                 membershipType: primaryCharacter.membershipType,
                 progressionHash: progression.progressionHash,
                 progressionDef,
