@@ -1,9 +1,9 @@
 import React from "react";
 import { toast } from "sonner";
+import { ConfirmationDialog } from "@/app/components/modals/ConfirmationModal";
 import { useClaimItem } from "@/app/hooks/useClaimItem";
 import { cn } from "@/app/lib/utils";
 import { ItemVariant, UnclaimedItem } from "@/types";
-import { ConfirmationModal } from "@/app/components/modals/ConfirmationModal";
 
 const classNameMap = {
   0: "Titan",
@@ -28,31 +28,30 @@ export const SeasonPassItem = React.memo(
       item.itemCharacterClass === 3 ||
       item.itemCharacterClass === item.transferCharacter.classType;
 
-    const claimItemMutation = useClaimItem({
-      onError: (error) => {
-        toast.error("Error Claiming Item", {
-          description: error.message
-        });
-      },
-      onSuccess: () => {
-        toast.success("Item claimed", {
-          description: `${quantity} ${item.itemDef.displayProperties.name} has been transferred to the inventory of your ${
-            classNameMap[item.transferCharacter.classType]
-          }`
-        });
-        setIsClaimed(true);
-      }
-    });
-
-    const handleClaimItem = () => {
-      claimItemMutation.mutate({
+    const { mutate: claimItem } = useClaimItem(
+      {
         characterId: item.transferCharacter.characterId,
         membershipType: item.membershipType,
         rewardIndex: item.rewardItem.rewardItemIndex,
         seasonHash: item.seasonDef.hash,
         progressionHash: item.progressionHash
-      });
-    };
+      },
+      {
+        onError: (error) => {
+          toast.error("Error Claiming Item", {
+            description: error.message
+          });
+        },
+        onSuccess: () => {
+          toast.success("Item claimed", {
+            description: `${quantity} ${item.itemDef.displayProperties.name} has been transferred to the inventory of your ${
+              classNameMap[item.transferCharacter.classType]
+            }`
+          });
+          setIsClaimed(true);
+        }
+      }
+    );
 
     return (
       <>
@@ -120,14 +119,14 @@ export const SeasonPassItem = React.memo(
           )}
         </div>
 
-        <ConfirmationModal
+        <ConfirmationDialog
           isOpen={isConfirmModalOpen}
           onClose={() => setIsConfirmModalOpen(false)}
-          onConfirm={handleClaimItem}
+          onConfirm={claimItem}
           title="Confirm Item Claim"
           message={[
             `Are you sure you want to claim ${quantity} ${item.itemDef.displayProperties.name} from ${item.seasonDef.displayProperties.name}?`,
-            `Note: This item will be transferred to the inventory of your ${classNameMap[item.characterClass]}.`,
+            `Note: This item will be transferred to the inventory of your ${classNameMap[item.transferCharacter.classType]}.`,
             "This action is irreversible."
           ]}
         />

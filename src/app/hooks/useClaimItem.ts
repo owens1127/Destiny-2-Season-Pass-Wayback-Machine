@@ -5,25 +5,28 @@ type ClaimRewardParams = Parameters<
   ReturnType<typeof useBungie>["claimSeasonPassReward"]
 >[0];
 
-export const useClaimItem = ({
-  onSuccess,
-  onError
-}: {
-  onError?: (error: Error, variables: ClaimRewardParams) => void;
-  onSuccess?: (data: unknown, variables: ClaimRewardParams) => void;
-} = {}) => {
+export const useClaimItem = (
+  args: ClaimRewardParams,
+  {
+    onSuccess,
+    onError
+  }: {
+    onError?: (error: Error) => void;
+    onSuccess?: (data: unknown) => void;
+  } = {}
+) => {
   const bungie = useBungie();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ["claimSeasonPassReward"],
-    mutationFn: (args: ClaimRewardParams) => bungie.claimSeasonPassReward(args),
+    mutationFn: () => bungie.claimSeasonPassReward(args),
     onError,
-    onSuccess: (data, variables) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: ["destinyProfileProgressions"]
       });
-      onSuccess?.(data, variables);
+      onSuccess?.(data);
     }
   });
 };

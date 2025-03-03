@@ -1,6 +1,14 @@
-import React from "react";
+import { Button } from "@/app/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from "@/app/components/ui/dialog";
 
-interface ConfirmationModalProps {
+interface ConfirmationDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
@@ -8,44 +16,44 @@ interface ConfirmationModalProps {
   message: string[];
 }
 
-export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
+export const ConfirmationDialog = ({
   isOpen,
   onClose,
   onConfirm,
   title,
-  message,
-}) => {
-  if (!isOpen) return null;
-
+  message
+}: ConfirmationDialogProps) => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="w-full max-w-md rounded-lg bg-gray-800 p-6 shadow-lg">
-        <h3 className="mb-4 text-xl font-bold text-white">{title}</h3>
-        <div className="mb-6 space-y-2">
-          {message.map((paragraph, index) => (
-            <p key={index} className="text-gray-300">
-              {paragraph}
-            </p>
-          ))}
-        </div>
-        <div className="flex justify-end space-x-3">
-          <button
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="border-none bg-gray-800 sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription className="space-y-3 pt-2">
+            {message.map((paragraph, index) => (
+              <p className="text-gray-300" key={index}>
+                {paragraph}
+              </p>
+            ))}
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className="flex justify-end gap-2 sm:justify-end">
+          <Button
             onClick={onClose}
-            className="rounded-md bg-gray-600 px-4 py-2 text-white hover:bg-gray-700"
+            className="cursor-pointer bg-gray-600 hover:bg-gray-700"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => {
               onConfirm();
               onClose();
             }}
-            className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            className="cursor-pointer bg-blue-600 hover:bg-blue-700"
           >
             Confirm
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
-}; 
+};
