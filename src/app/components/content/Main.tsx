@@ -136,26 +136,50 @@ export const Main = React.memo(
       seasonProgressions
     ]);
 
+    const totalUnclaimedItems = allUnclaimedItems.length;
+
     const categorizedItems = useCategorizedItems(allUnclaimedItems);
 
     return (
       <div className="dark container mx-auto mb-8 p-4">
         <div className="mb-6">
-          <h1 className="mb-4 text-2xl font-bold">All Unclaimed Rewards</h1>
+          <h1 className="mb-4 text-2xl font-bold">
+            All Unclaimed Season Pass Rewards
+          </h1>
           <p className="mb-2 text-sm text-gray-400">
             Powered by the Destiny 2 Season Pass Wayback Machine
           </p>
+          {totalUnclaimedItems > 0 && (
+            <div className="mb-2 text-lg font-semibold">
+              <span>{"You have a total of "}</span>
+              <span className="text-xl text-sky-400">
+                {totalUnclaimedItems.toLocaleString()}
+              </span>
+              <span>{` unclaimed item${
+                totalUnclaimedItems > 1 ? "s" : ""
+              } across all seasons.`}</span>
+            </div>
+          )}
           <p className="text-sm text-gray-400 italic">
             {`Unfortunately, some season pass data from older seasons has been deleted from the Bungie API. The extension can only pull data from seasons as far back as ${earliestVisibileSeason.displayProperties.name} (${earliestVisibileSeasonStartDate}).`}
           </p>
         </div>
-        <div className="flex flex-wrap gap-8">
-          <CollapseManager>
-            {categorizedItems.map((category) => (
-              <UnclaimedItemCategory key={category.category} {...category} />
-            ))}
-          </CollapseManager>
-        </div>
+        {totalUnclaimedItems > 0 ? (
+          <div className="flex flex-wrap gap-8">
+            <CollapseManager>
+              {categorizedItems.map((category) => (
+                <UnclaimedItemCategory key={category.category} {...category} />
+              ))}
+            </CollapseManager>
+          </div>
+        ) : (
+          <div className="w-full text-center">
+            <h3 className="text-xl font-bold">No unclaimed items found</h3>
+            <p className="text-gray-400">
+              You have no unclaimed items on your account.
+            </p>
+          </div>
+        )}
       </div>
     );
   }
