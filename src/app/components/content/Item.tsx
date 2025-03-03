@@ -65,6 +65,7 @@ export const SeasonPassItem = React.memo(
             }
           )}
           onClick={() => {
+            console.log(item);
             if (isClaimed) {
               return;
             }
