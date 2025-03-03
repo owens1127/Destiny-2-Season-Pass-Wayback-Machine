@@ -76,8 +76,8 @@ export const Main = React.memo(
 
     const allUnclaimedItems = React.useMemo(() => {
       const characterMap = Object.fromEntries(
-        Object.entries(characters).map(
-          ([id, component]) => [component.classType, id] as const
+        Object.values(characters).map(
+          (component) => [component.classType, component] as const
         )
       );
 
@@ -106,11 +106,11 @@ export const Main = React.memo(
                   ? itemDef.classType
                   : (classRegexMapping[matchClassCategory?.[1] ?? ""] ?? 3);
 
-              const characterId =
-                characterMap[characterClass] ?? primaryCharacter.characterId;
+              const characterComponent =
+                characterMap[characterClass] ?? primaryCharacter;
 
               return {
-                characterId,
+                character: characterComponent,
                 characterClass,
                 membershipType: primaryCharacter.membershipType,
                 progressionHash: progression.progressionHash,
@@ -128,13 +128,7 @@ export const Main = React.memo(
               return (state & 2) === 2 && (state & 4) !== 4;
             })
       );
-    }, [
-      characters,
-      itemDefs.data,
-      primaryCharacter.characterId,
-      primaryCharacter.membershipType,
-      seasonProgressions
-    ]);
+    }, [characters, itemDefs.data, primaryCharacter, seasonProgressions]);
 
     const totalUnclaimedItems = allUnclaimedItems.length;
 

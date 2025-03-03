@@ -112,11 +112,9 @@ export const UnclaimedItemCategory = ({
         <div className="relative grid grid-cols-[repeat(auto-fit,64px)] gap-x-4 gap-y-8 md:grid-cols-[repeat(auto-fit,96px)]">
           {sortedItems.map((item) => (
             <SeasonPassItem
-              key={[
-                item.characterId,
-                item.progressionHash,
-                item.rewardItem.rewardItemIndex
-              ].join("-")}
+              key={[item.progressionHash, item.rewardItem.rewardItemIndex].join(
+                "-"
+              )}
               variant={variant}
               item={item}
             />

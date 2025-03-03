@@ -22,6 +22,9 @@ export const SeasonPassItem = React.memo(
       item.rewardItem.socketOverrides.some(
         (socket) => socket.overrideSingleItemHash === 213377779
       );
+    const isClaimableByCharacter =
+      item.characterClass === 3 ||
+      item.characterClass === item.character.classType;
 
     const claimItemMutation = useClaimItem({
       onError: (error) => {
@@ -46,8 +49,7 @@ export const SeasonPassItem = React.memo(
           {
             "border-2 border-red-600/75": isDeepsight,
             "hover:scale-[1.03]": !isClaimed,
-            "opacity-50": isClaimed,
-            grayscale: isClaimed
+            "opacity-50": isClaimed
           }
         )}
         onClick={() => {
@@ -71,7 +73,7 @@ export const SeasonPassItem = React.memo(
           }
 
           claimItemMutation.mutate({
-            characterId: item.characterId,
+            characterId: item.character.characterId,
             membershipType: item.membershipType,
             rewardIndex: item.rewardItem.rewardItemIndex,
             seasonHash: item.seasonDef.hash,
@@ -82,7 +84,9 @@ export const SeasonPassItem = React.memo(
         <img
           src={`https://www.bungie.net${item.itemDef.displayProperties.icon}`}
           alt={item.itemDef.displayProperties.name}
-          className="absolute h-full w-full object-cover"
+          className={cn("absolute h-full w-full object-cover", {
+            grayscale: isClaimed || !isClaimableByCharacter
+          })}
         />
         {item.itemDef.iconWatermark && (
           <img
@@ -91,7 +95,14 @@ export const SeasonPassItem = React.memo(
             alt=""
           />
         )}
+
+        {/* tooltip */}
         <div className="bottom-[90%] mb-1 hidden min-w-[150%] rounded bg-black/95 p-3 text-white group-hover:absolute group-hover:block">
+          {!isClaimableByCharacter && (
+            <p className="text-sm text-red-500">
+              Could not find available character to claim item
+            </p>
+          )}
           <p className="text-lg text-nowrap">
             {item.itemDef.displayProperties.name}
           </p>
@@ -102,6 +113,7 @@ export const SeasonPassItem = React.memo(
             {`Rank ${item.rewardItem.rewardedAtProgressionLevel}`}
           </p>
         </div>
+
         {isShowQuantity && (
           <div
             className={cn(
