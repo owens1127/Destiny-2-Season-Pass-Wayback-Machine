@@ -44,9 +44,16 @@ export class BungieHttpClient {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(`${data.ErrorStatus}: ${data.Message}`, {
-          cause: data
-        });
+        const errMessage = `${data.ErrorStatus}: ${data.Message}`;
+        const messageData = (
+          Object.values(data.MessageData ?? {}) as string[]
+        ).join(", ");
+        throw new Error(
+          messageData ? `${errMessage} ${messageData}` : errMessage,
+          {
+            cause: data
+          }
+        );
       }
 
       return data;

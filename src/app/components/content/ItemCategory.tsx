@@ -16,54 +16,39 @@ export const UnclaimedItemCategory = ({
   const [isCollapsed, setIsCollapsed] = useCollapse(category);
 
   const sortedItems = React.useMemo(() => {
-    if (variant === "currency" || variant === "material") {
-      return items.toSorted((a, b) => {
-        const diff = b.rewardItem.quantity - a.rewardItem.quantity;
-        if (diff) {
-          return diff;
-        }
-        const diff2 = b.seasonDef.seasonNumber - a.seasonDef.seasonNumber;
-        if (diff2) {
-          return diff2;
-        }
-        return (
-          b.rewardItem.rewardedAtProgressionLevel -
-          a.rewardItem.rewardedAtProgressionLevel
-        );
-      });
-    } else if (variant === "item") {
-      return items.toSorted((a, b) => {
-        const diff =
-          (b.itemDef.inventory?.tierType ?? 0) -
-          (a.itemDef.inventory?.tierType ?? 0);
-        if (diff) {
-          return diff;
-        }
-        const diff2 = b.seasonDef.seasonNumber - a.seasonDef.seasonNumber;
-        if (diff2) {
-          return diff2;
-        }
-        const diff3 =
-          b.rewardItem.rewardedAtProgressionLevel -
-          a.rewardItem.rewardedAtProgressionLevel;
-        if (diff3) {
-          return diff3;
-        }
-        return a.itemCharacterClass - b.itemCharacterClass;
-      });
-    } else {
-      return items.toSorted((a, b) => {
-        const diff = b.seasonDef.seasonNumber - a.seasonDef.seasonNumber;
-        if (diff) {
-          return diff;
-        }
-        return (
-          b.rewardItem.rewardedAtProgressionLevel -
-          a.rewardItem.rewardedAtProgressionLevel
-        );
-      });
-    }
-  }, [items, variant]);
+    return items.toSorted((a, b) => {
+      const claimableDiff = +b.canClaimThisSeason - +a.canClaimThisSeason;
+      if (claimableDiff) {
+        return claimableDiff;
+      }
+
+      const quantityDiff = b.rewardItem.quantity - a.rewardItem.quantity;
+      if (quantityDiff) {
+        return quantityDiff;
+      }
+
+      const diff =
+        (b.itemDef.inventory?.tierType ?? 0) -
+        (a.itemDef.inventory?.tierType ?? 0);
+      if (diff) {
+        return diff;
+      }
+
+      const diff2 = b.seasonDef.seasonNumber - a.seasonDef.seasonNumber;
+      if (diff2) {
+        return diff2;
+      }
+
+      const diff3 =
+        b.rewardItem.rewardedAtProgressionLevel -
+        a.rewardItem.rewardedAtProgressionLevel;
+      if (diff3) {
+        return diff3;
+      }
+
+      return a.itemCharacterClass - b.itemCharacterClass;
+    });
+  }, [items]);
 
   if (items.length === 0) {
     return null;

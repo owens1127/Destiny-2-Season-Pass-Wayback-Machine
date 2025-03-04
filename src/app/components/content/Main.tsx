@@ -88,6 +88,7 @@ export const Main = React.memo(
         hunter: 1,
         warlock: 2
       };
+      const now = Date.now();
 
       return seasonProgressions.flatMap(
         ({ progression, progressionDef, seasonDef }) =>
@@ -120,7 +121,11 @@ export const Main = React.memo(
                   progression.rewardItemSocketOverrideStates[rewardIndex],
                 rewardItem: progressionDef.rewardItems[rewardIndex],
                 itemDef,
-                state
+                state,
+                canClaimThisSeason:
+                  new Date(
+                    seasonDef.endDate ?? Number.MAX_SAFE_INTEGER
+                  ).getTime() < now
               };
             })
             .filter(({ state }) => {

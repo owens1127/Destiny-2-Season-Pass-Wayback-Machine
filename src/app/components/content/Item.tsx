@@ -66,7 +66,11 @@ export const SeasonPassItem = React.memo(
           )}
           onClick={() => {
             console.log(item);
-            if (isClaimed) {
+            if (
+              isClaimed ||
+              !isClaimableByCharacter ||
+              !item.canClaimThisSeason
+            ) {
               return;
             }
 
@@ -77,7 +81,8 @@ export const SeasonPassItem = React.memo(
             src={`https://www.bungie.net${item.itemDef.displayProperties.icon}`}
             alt={item.itemDef.displayProperties.name}
             className={cn("absolute h-full w-full object-cover", {
-              grayscale: isClaimed || !isClaimableByCharacter
+              grayscale:
+                isClaimed || !isClaimableByCharacter || !item.canClaimThisSeason
             })}
           />
           {item.itemDef.iconWatermark && (
@@ -89,10 +94,16 @@ export const SeasonPassItem = React.memo(
           )}
 
           {/* tooltip */}
-          <div className="bottom-[90%] mb-1 hidden min-w-[150%] rounded bg-black/95 p-3 text-white group-hover:absolute group-hover:block">
+          <div className="bottom-[90%] mb-1 hidden min-w-[200%] rounded bg-black/95 p-3 text-white group-hover:absolute group-hover:block">
             {!isClaimableByCharacter && (
               <p className="text-sm text-red-500">
                 Could not find available character to claim item
+              </p>
+            )}
+            {!item.canClaimThisSeason && (
+              <p className="text-sm text-red-500">
+                Season has not ended. Item cannot be claimed yet. You must claim
+                this item in-game.
               </p>
             )}
             <p className="text-lg text-nowrap">

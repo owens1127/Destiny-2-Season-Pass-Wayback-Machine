@@ -20,6 +20,7 @@ export type UnclaimedItem = {
   itemDef: DestinyInventoryItemDefinition;
   seasonDef: DestinySeasonDefinition;
   state: DestinyProgressionRewardItemState;
+  canClaimThisSeason: boolean;
 };
 
 export type ItemVariant = "currency" | "material" | "item" | "engram";
