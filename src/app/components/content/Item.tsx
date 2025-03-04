@@ -2,18 +2,22 @@ import React from "react";
 import { toast } from "sonner";
 import { ConfirmationDialog } from "@/app/components/modals/ConfirmationModal";
 import { useClaimItem } from "@/app/hooks/useClaimItem";
+import { useDestinyManifestComponentsSuspended } from "@/app/hooks/useDestinyManifestComponent";
 import { cn } from "@/app/lib/utils";
 import { ItemVariant, UnclaimedItem } from "@/types";
 
-const classNameMap = {
-  0: "Titan",
-  1: "Hunter",
-  2: "Warlock",
-  3: "Account"
-};
-
 export const SeasonPassItem = React.memo(
   ({ item, variant }: { item: UnclaimedItem; variant: ItemVariant }) => {
+    const [classDefs] = useDestinyManifestComponentsSuspended([
+      "DestinyClassDefinition"
+    ]);
+    const classNameMap = Object.fromEntries(
+      Object.values(classDefs.data).map((classDef) => [
+        classDef.classType,
+        classDef.displayProperties.name
+      ])
+    );
+
     const [isClaimed, setIsClaimed] = React.useState(false);
     const [isConfirmModalOpen, setIsConfirmModalOpen] = React.useState(false);
 
@@ -101,12 +105,15 @@ export const SeasonPassItem = React.memo(
               </p>
             )}
             {!item.canClaimThisSeason && (
-              <p className="text-sm text-red-500">
+              <p className="text-sm text-yellow-500">
                 Season has not ended. Item cannot be claimed yet. You must claim
                 this item in-game.
               </p>
             )}
             <p className="text-lg text-nowrap">
+              {item.itemCharacterClass !== 3
+                ? `${classNameMap[item.itemCharacterClass]} - `
+                : ""}
               {item.itemDef.displayProperties.name}
             </p>
             <p className="text-sm text-gray-400">

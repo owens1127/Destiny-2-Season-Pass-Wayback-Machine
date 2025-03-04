@@ -13,6 +13,7 @@ export default function App() {
   useDestinyManifestComponent("DestinyActivityDefinition");
   useDestinyManifestComponent("DestinySeasonDefinition");
   useDestinyManifestComponent("DestinyInventoryItemDefinition");
+  useDestinyManifestComponent("DestinyClassDefinition");
 
   const membershipQuery = useDestinyMembership();
   const progressionsQueryQuery = useProfileProgressions(
