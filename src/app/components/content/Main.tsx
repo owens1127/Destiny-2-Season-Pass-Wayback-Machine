@@ -17,11 +17,12 @@ export const Main = React.memo(
     profileProgressions: DestinyProgression[];
     characters: Record<string, DestinyCharacterComponent>;
   }) => {
-    const [seasonDefs, progressionDefs, itemDefs] =
+    const [seasonDefs, progressionDefs, itemDefs, classDefs] =
       useDestinyManifestComponentsSuspended([
         "DestinySeasonDefinition",
         "DestinyProgressionDefinition",
-        "DestinyInventoryItemDefinition"
+        "DestinyInventoryItemDefinition",
+        "DestinyClassDefinition"
       ]);
 
     const primaryCharacter = Object.values(characters).sort(
@@ -29,6 +30,10 @@ export const Main = React.memo(
         new Date(b.dateLastPlayed).getTime() -
         new Date(a.dateLastPlayed).getTime()
     )[0];
+
+    const primaryCharacterClassName = Object.values(classDefs.data).find(
+      (def) => def.classType === primaryCharacter.classType
+    )!.displayProperties.name;
 
     const seasonProgressions = React.useMemo(() => {
       const seasons = Object.values(seasonDefs.data);
@@ -158,10 +163,20 @@ export const Main = React.memo(
               } across all seasons.`}</span>
             </div>
           )}
-          <p className="text-sm text-gray-400 italic">
+          <p className="mb-2 text-sm text-gray-400 italic">
             {`Unfortunately, some season pass data from older seasons has been deleted from the Bungie API. The extension can only pull data from seasons as far back as ${earliestVisibileSeason.displayProperties.name} (${earliestVisibileSeasonStartDate}).`}
           </p>
+
+          <p className="text-lg font-semibold">
+            {
+              "All non-class-specific items will transfer to the inventory of your "
+            }
+            <span className="text-xl text-green-400">
+              {primaryCharacterClassName}
+            </span>
+          </p>
         </div>
+
         {totalUnclaimedItems > 0 ? (
           <div className="flex flex-wrap gap-8">
             <CollapseManager>

@@ -106,8 +106,8 @@ export const SeasonPassItem = React.memo(
             )}
             {!item.canClaimThisSeason && (
               <p className="text-sm text-yellow-500">
-                Season has not ended. Item cannot be claimed yet. You must claim
-                this item in-game.
+                Season has not ended. Item cannot yet be claimed via the API.
+                You must claim this item in-game.
               </p>
             )}
             <p className="text-lg text-nowrap">
