@@ -27,23 +27,23 @@ export const UnclaimedItemCategory = ({
         return quantityDiff;
       }
 
-      const diff =
+      const tierDiff =
         (b.itemDef.inventory?.tierType ?? 0) -
         (a.itemDef.inventory?.tierType ?? 0);
-      if (diff) {
-        return diff;
+      if (tierDiff) {
+        return tierDiff;
       }
 
-      const diff2 = b.seasonDef.seasonNumber - a.seasonDef.seasonNumber;
-      if (diff2) {
-        return diff2;
+      const seasonDiff = a.seasonDef.seasonNumber - b.seasonDef.seasonNumber;
+      if (seasonDiff) {
+        return seasonDiff;
       }
 
-      const diff3 =
+      const rankDiff =
         b.rewardItem.rewardedAtProgressionLevel -
         a.rewardItem.rewardedAtProgressionLevel;
-      if (diff3) {
-        return diff3;
+      if (rankDiff) {
+        return rankDiff;
       }
 
       return a.itemCharacterClass - b.itemCharacterClass;
