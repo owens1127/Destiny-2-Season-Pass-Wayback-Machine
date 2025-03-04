@@ -53,8 +53,7 @@ export const Main = React.memo(
               progressionDefs.data[seasonDef.seasonPassProgressionHash!]
           };
         })
-        .filter(({ progressionDef }) => !!progressionDef.rewardItems?.length)
-        .sort((a, b) => b.seasonDef.seasonNumber - a.seasonDef.seasonNumber);
+        .filter(({ progressionDef }) => !!progressionDef.rewardItems?.length);
     }, [profileProgressions, progressionDefs.data, seasonDefs.data]);
 
     const earliestVisibileSeason = React.useMemo(
@@ -129,10 +128,8 @@ export const Main = React.memo(
               };
             })
             .filter(({ state }) => {
-              // the bitmap for the item must be earned (2) and claimable (8) or invisible (1)
-              return (
-                (state & 2) === 2 && ((state & 1) === 1 || (state & 8) === 8)
-              );
+              // the bitmap for the item must be earned (2), not claimed (4), and claimable (8) or invisible (1)
+              return (state & (2 | 6)) === 2 && (state & (1 | 8)) > 0;
             })
       );
     }, [characters, itemDefs.data, primaryCharacter, seasonProgressions]);
