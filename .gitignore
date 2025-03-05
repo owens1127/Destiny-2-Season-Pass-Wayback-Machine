@@ -44,3 +44,5 @@ certificates
 
 # zips
 *.zip
+
+/safari/

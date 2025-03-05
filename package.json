@@ -4,9 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build": "tsc -b && vite build && mv build/src/popup.html build/",
-    "zip:chrome": "zip -r chrome.zip build/*",
-    "zip:firefox": "cd build && zip -r ../firefox.zip .",
+    "build": "tsc -b && vite build",
+    "zip:build": "rm -f build.zip && cd build && zip -r ../build.zip .",
+    "zip:src": "rm -f src.zip && zip -r src.zip src .env .prettierrc bun.lockb *.json eslint.config.js icon.png vite.config.ts",
+    "build:safari": "xcrun safari-web-extension-converter --app-name destiny2-season-pass-wayback-machine --force --no-open --no-prompt --project-location ./safari ./build",
+    "package:safari:ios": "xcodebuild -scheme \"destiny2-season-pass-wayback-machine (iOS)\" -project ./safari/destiny2-season-pass-wayback-machine/destiny2-season-pass-wayback-machine.xcodeproj -derivedDataPath ./safari/ios",
+    "package:safari:mac": "xcodebuild -scheme \"destiny2-season-pass-wayback-machine (macOS)\" -project ./safari/destiny2-season-pass-wayback-machine/destiny2-season-pass-wayback-machine.xcodeproj -derivedDataPath ./safari/mac",
+    "simulate:ios": "xcrun simctl boot 'iPhone 16' && open -a Simulator",
     "lint": "eslint .",
     "format": "prettier --write .",
     "preview": "vite preview"
