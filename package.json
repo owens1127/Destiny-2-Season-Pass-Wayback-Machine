@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build": "tsc -b && vite build && mv build/src/popup.html build/",
-    "zip:chrome": "zip -r chrome.zip build/*",
-    "zip:firefox": "cd build && zip -r ../firefox.zip .",
+    "build": "tsc -b && vite build",
+    "zip:build": "rm -f build.zip && cd build && zip -r ../build.zip .",
+    "zip:src": "rm -f src.zip && zip -r src.zip src .env .prettierrc bun.lockb *.json eslint.config.js icon.png vite.config.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
     "preview": "vite preview"

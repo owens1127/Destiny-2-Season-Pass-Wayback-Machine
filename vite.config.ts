@@ -15,6 +15,10 @@ export default defineConfig({
           dest: "."
         },
         {
+          src: path.resolve(__dirname, "src/popup.html"),
+          dest: "."
+        },
+        {
           src: path.resolve(__dirname, "icon.png"),
           dest: "./assets"
         }
@@ -27,14 +31,13 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: "build",
+    outDir: path.resolve(__dirname, "build"),
     minify: false,
     target: ["chrome111", "firefox110"],
     rollupOptions: {
       input: {
         content: path.resolve(__dirname, "src/content.tsx"),
-        styles: path.resolve(__dirname, "src/styles.css"),
-        popup: path.resolve(__dirname, "src/popup.html")
+        styles: path.resolve(__dirname, "src/styles.css")
       },
       output: {
         entryFileNames: "[name].js",

@@ -132,9 +132,14 @@ export const Main = React.memo(
                   ).getTime() < now
               };
             })
-            .filter(({ state }) => {
-              // the bitmap for the item must be earned (2), not claimed (4), and claimable (8) or invisible (1)
-              return (state & (2 | 6)) === 2 && (state & (1 | 8)) > 0;
+            .filter(({ state, rewardItem }) => {
+              return (
+                // "Hidden Legendary Weapon Rewards" (4147131133) are not real items; they are duplicates
+                rewardItem.itemHash !== 4147131133 &&
+                // the bitmap for the item must be earned (2), not claimed (4), and claimable (8) or invisible (1)
+                (state & (2 | 4)) === 2 &&
+                (state & (1 | 8)) > 0
+              );
             })
       );
     }, [characters, itemDefs.data, primaryCharacter, seasonProgressions]);
@@ -242,9 +247,6 @@ const useCategorizedItems = (items: UnclaimedItem[]) =>
       kineticWeapons: createCategorySet("Kinetic Weapons"),
       energyWeapons: createCategorySet("Energy Weapons"),
       powerWeapons: createCategorySet("Power Weapons"),
-      hiddenLegendaryWeaponRewards: createCategorySet(
-        "Hidden Legendary Weapon Rewards"
-      ),
       hunterHelmets: createCategorySet("Hunter Helmets"),
       hunterArms: createCategorySet("Hunter Grips"),
       hunterChests: createCategorySet("Hunter Vests"),
@@ -305,8 +307,6 @@ const useCategorizedItems = (items: UnclaimedItem[]) =>
         push("energyWeapons", item);
       } else if (itemDef.inventory?.bucketTypeHash === 953998645) {
         push("powerWeapons", item);
-      } else if (rewardItem.itemHash === 4147131133) {
-        push("hiddenLegendaryWeaponRewards", item);
       } else if (rewardItem.itemHash === 800069450) {
         push("strangeCoins", item);
       } else if (itemDef.itemType === 29) {
