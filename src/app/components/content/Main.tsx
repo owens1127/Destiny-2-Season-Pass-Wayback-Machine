@@ -1,8 +1,8 @@
 import React from "react";
 import {
   DestinyCharacterComponent,
-  DestinyClass,
-  DestinyProgression
+  DestinyCharacterProgressionComponent,
+  DestinyClass
 } from "bungie-net-core/models";
 import { useDestinyManifestComponentsSuspended } from "@/app/hooks/useDestinyManifestComponent";
 import { ItemVariant, UnclaimedItem } from "@/types";
@@ -14,7 +14,7 @@ export const Main = React.memo(
     profileProgressions,
     characters
   }: {
-    profileProgressions: DestinyProgression[];
+    profileProgressions: Record<string, DestinyCharacterProgressionComponent>;
     characters: Record<string, DestinyCharacterComponent>;
   }) => {
     const [seasonDefs, progressionDefs, itemDefs, classDefs] =
@@ -25,15 +25,52 @@ export const Main = React.memo(
         "DestinyClassDefinition"
       ]);
 
-    const primaryCharacter = Object.values(characters).sort(
-      (a, b) =>
-        new Date(b.dateLastPlayed).getTime() -
-        new Date(a.dateLastPlayed).getTime()
-    )[0];
+    const [primaryCharacterId, setPrimaryCharacterId] = React.useState(
+      () =>
+        Object.values(characters).sort(
+          (a, b) =>
+            new Date(b.dateLastPlayed).getTime() -
+            new Date(a.dateLastPlayed).getTime()
+        )[0].characterId
+    );
+    const primaryCharacter = characters[primaryCharacterId];
 
-    const primaryCharacterClassName = Object.values(classDefs.data).find(
-      (def) => def.classType === primaryCharacter.classType
-    )!.displayProperties.name;
+    const characterProgressions =
+      profileProgressions[primaryCharacterId].progressions;
+
+    React.useEffect(() => {
+      // Get the Bungie character selector dropdown to sync into the extension
+      const characterSelect = document.querySelector(
+        'div[aria-selected="true"][class^="Dropdown_selectOption"][data-value^="230584"]'
+      );
+
+      const selectorDiv = characterSelect?.parentNode?.parentNode;
+
+      if (selectorDiv) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              const element = node as HTMLDivElement;
+              if (element.getAttribute("aria-selected") === "true") {
+                const characterId = element.getAttribute("data-value")!;
+                if (characterId) {
+                  setPrimaryCharacterId(characterId);
+                }
+              }
+            });
+          });
+        });
+
+        observer.observe(selectorDiv, {
+          childList: true,
+          subtree: true
+        });
+
+        return () => {
+          observer.disconnect();
+        };
+      }
+    }, []);
 
     const seasonProgressions = React.useMemo(() => {
       const seasons = Object.values(seasonDefs.data);
@@ -42,7 +79,7 @@ export const Main = React.memo(
         .map((season) => season.seasonPassProgressionHash)
         .filter((hash): hash is number => !!hash);
 
-      return Object.values(profileProgressions)
+      return Object.values(characterProgressions)
         .filter(({ progressionHash }) =>
           seasonProgressionHashes.includes(progressionHash)
         )
@@ -59,7 +96,7 @@ export const Main = React.memo(
           };
         })
         .filter(({ progressionDef }) => !!progressionDef.rewardItems?.length);
-    }, [profileProgressions, progressionDefs.data, seasonDefs.data]);
+    }, [characterProgressions, progressionDefs.data, seasonDefs.data]);
 
     const earliestVisibileSeason = React.useMemo(
       () =>
@@ -144,9 +181,9 @@ export const Main = React.memo(
       );
     }, [characters, itemDefs.data, primaryCharacter, seasonProgressions]);
 
-    const totalUnclaimedItems = allUnclaimedItems.length;
-
     const categorizedItems = useCategorizedItems(allUnclaimedItems);
+
+    const totalUnclaimedItems = allUnclaimedItems.length;
 
     return (
       <div className="dark container mx-auto mb-8 p-4">
@@ -173,12 +210,28 @@ export const Main = React.memo(
           </p>
 
           <p className="text-lg font-semibold">
-            {
-              "All non-class-specific items will transfer to the inventory of your "
-            }
-            <span className="text-xl text-green-400">
-              {primaryCharacterClassName}
+            <span>
+              {
+                "All non-class-specific items will transfer to the inventory of your"
+              }
             </span>
+            <select
+              value={primaryCharacterId}
+              onChange={(e) => setPrimaryCharacterId(e.target.value)}
+              className="ml-1 cursor-pointer text-xl text-green-400"
+            >
+              {Object.values(characters).map((char) => (
+                <option
+                  key={char.characterId}
+                  value={char.characterId}
+                  className="text-base text-popover"
+                >
+                  {Object.values(classDefs.data).find(
+                    (def) => def.classType === char.classType
+                  )?.displayProperties.name ?? "Unknown"}
+                </option>
+              ))}
+            </select>
           </p>
         </div>
 

@@ -56,15 +56,10 @@ export default function App() {
     return <PageSkeleton />;
   }
 
-  const profileProgressions = Object.values(
-    Object.values(progressionsQueryQuery.data.profileProgressions)[0]
-      .progressions
-  );
-
   return (
     <Suspense fallback={<PageSkeleton />}>
       <Main
-        profileProgressions={profileProgressions}
+        profileProgressions={progressionsQueryQuery.data.profileProgressions}
         characters={progressionsQueryQuery.data.characters}
       />
     </Suspense>
