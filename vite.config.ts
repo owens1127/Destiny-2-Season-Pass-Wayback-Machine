@@ -11,33 +11,33 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: path.resolve(__dirname, "manifest.json"),
+          src: "manifest.json",
           dest: "."
         },
         {
-          src: path.resolve(__dirname, "src/popup.html"),
+          src: "src/popup.html",
           dest: "."
         },
         {
-          src: path.resolve(__dirname, "icon.png"),
-          dest: "./assets"
+          src: "icon.png",
+          dest: "assets"
         }
       ]
     })
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src")
+      "@": path.resolve("src")
     }
   },
   build: {
-    outDir: path.resolve(__dirname, "build"),
+    outDir: "build",
     minify: false,
     target: ["chrome111", "firefox110"],
     rollupOptions: {
       input: {
-        content: path.resolve(__dirname, "src/content.tsx"),
-        styles: path.resolve(__dirname, "src/styles.css")
+        content: "src/content.tsx",
+        styles: "src/styles.css"
       },
       output: {
         entryFileNames: "[name].js",

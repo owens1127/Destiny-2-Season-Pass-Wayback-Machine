@@ -68,7 +68,7 @@ export const SeasonPassItem = React.memo(
               "opacity-50": isClaimed
             }
           )}
-          onClick={() => {
+          onClick={(e) => {
             console.log(item);
             if (
               isClaimed ||
@@ -78,7 +78,13 @@ export const SeasonPassItem = React.memo(
               return;
             }
 
-            setIsConfirmModalOpen(true);
+            const isBypassConfirmation = e.ctrlKey || e.metaKey;
+
+            if (isBypassConfirmation) {
+              claimItem();
+            } else {
+              setIsConfirmModalOpen(true);
+            }
           }}
         >
           <img
