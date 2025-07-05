@@ -77,7 +77,8 @@ export const SeasonPassItem = React.memo(
             ) {
               return;
             }
-            const isBypassConfirmation = e.ctrlKey;
+
+            const isBypassConfirmation = e.ctrlKey || e.metaKey;
 
             if (isBypassConfirmation) {
               claimItem();
