@@ -12,6 +12,7 @@ export default function App() {
   // preloading
   useDestinyManifestComponent("DestinyActivityDefinition");
   useDestinyManifestComponent("DestinySeasonDefinition");
+  useDestinyManifestComponent("DestinySeasonPassDefinition");
   useDestinyManifestComponent("DestinyInventoryItemDefinition");
   useDestinyManifestComponent("DestinyClassDefinition");
 

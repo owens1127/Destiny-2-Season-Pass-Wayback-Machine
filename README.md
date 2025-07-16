@@ -24,7 +24,7 @@ If you want to install the extension from source, you can do so by following the
 ## How it works
 
 1. Install the extension.
-2. Sign into [Bungie.net](https://www.bungie.net/7/en/Seasons/Progress).
+2. Sign into [Bungie.net](https://www.bungie.net/7/en/Seasons/PreviousSeason).
 3. Click your profile icon in the top right.
 4. Click the **"Season Pass Progress"** tab.
 5. Scroll down the page a bit.\*

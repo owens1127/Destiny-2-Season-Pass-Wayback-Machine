@@ -17,9 +17,10 @@ export const Main = React.memo(
     profileProgressions: Record<string, DestinyCharacterProgressionComponent>;
     characters: Record<string, DestinyCharacterComponent>;
   }) => {
-    const [seasonDefs, progressionDefs, itemDefs, classDefs] =
+    const [seasonDefs, seasonPassDefs, progressionDefs, itemDefs, classDefs] =
       useDestinyManifestComponentsSuspended([
         "DestinySeasonDefinition",
+        "DestinySeasonPassDefinition",
         "DestinyProgressionDefinition",
         "DestinyInventoryItemDefinition",
         "DestinyClassDefinition"
@@ -40,43 +41,68 @@ export const Main = React.memo(
 
     React.useEffect(() => {
       // Get the Bungie character selector dropdown to sync into the extension
-      const characterSelect = document.querySelector(
+      const characterSelectOld = document.querySelector(
         'div[aria-selected="true"][class^="Dropdown_selectOption"][data-value^="230584"]'
       );
 
-      const selectorDiv = characterSelect?.parentNode?.parentNode;
+      const selectorDivOld = characterSelectOld?.parentNode?.parentNode;
 
-      if (selectorDiv) {
-        const observer = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-              const element = node as HTMLDivElement;
-              if (element.getAttribute("aria-selected") === "true") {
-                const characterId = element.getAttribute("data-value")!;
-                if (characterId) {
-                  setPrimaryCharacterId(characterId);
-                }
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          mutation.addedNodes.forEach((node) => {
+            const element = node as HTMLDivElement;
+            if (element.getAttribute("aria-selected") === "true") {
+              const characterId = element.getAttribute("data-value")!;
+              if (characterId) {
+                setPrimaryCharacterId(characterId);
               }
-            });
+            }
           });
         });
+      });
 
-        observer.observe(selectorDiv, {
+      if (selectorDivOld) {
+        observer.observe(selectorDivOld, {
           childList: true,
           subtree: true
         });
-
-        return () => {
-          observer.disconnect();
-        };
       }
+
+      return () => {
+        observer.disconnect();
+      };
+    }, []);
+
+    // Monitor the new character selector for changes
+    React.useEffect(() => {
+      const characterSelectNew = document.querySelector(
+        'input[class^="MuiSelect-nativeInput"][value^="230584"]'
+      ) as HTMLInputElement | null;
+
+      const observer = new MutationObserver(() => {
+        if (characterSelectNew) {
+          setPrimaryCharacterId(characterSelectNew.value);
+        }
+      });
+
+      if (characterSelectNew) {
+        observer.observe(characterSelectNew, {
+          attributes: true,
+          attributeFilter: ["value"]
+        });
+      }
+
+      return () => {
+        observer.disconnect();
+      };
     }, []);
 
     const seasonProgressions = React.useMemo(() => {
+      const seasonPasses = Object.values(seasonPassDefs.data);
       const seasons = Object.values(seasonDefs.data);
 
-      const seasonProgressionHashes = Object.values(seasons)
-        .map((season) => season.seasonPassProgressionHash)
+      const seasonProgressionHashes = Object.values(seasonPasses)
+        .map((pass) => pass.rewardProgressionHash)
         .filter((hash): hash is number => !!hash);
 
       return Object.values(characterProgressions)
@@ -84,19 +110,30 @@ export const Main = React.memo(
           seasonProgressionHashes.includes(progressionHash)
         )
         .map((progression) => {
-          const seasonDef = seasons.find(
-            (season) =>
-              season.seasonPassProgressionHash === progression.progressionHash
+          const passDef = seasonPasses.find(
+            (pass) => pass.rewardProgressionHash === progression.progressionHash
+          )!;
+          const seasonDef = seasons.find((season) =>
+            season.seasonPassList.some(
+              (pass) => pass.seasonPassHash === passDef.hash
+            )
           )!;
           return {
             progression,
             seasonDef,
-            progressionDef:
-              progressionDefs.data[seasonDef.seasonPassProgressionHash!]
+            passDef,
+            progressionDef: progressionDefs.data[progression.progressionHash]
           };
         })
         .filter(({ progressionDef }) => !!progressionDef.rewardItems?.length);
-    }, [characterProgressions, progressionDefs.data, seasonDefs.data]);
+    }, [
+      characterProgressions,
+      progressionDefs.data,
+      seasonDefs.data,
+      seasonPassDefs.data
+    ]);
+
+    console.log(seasonProgressions);
 
     const earliestVisibileSeason = React.useMemo(
       () =>
@@ -132,7 +169,7 @@ export const Main = React.memo(
       const now = Date.now();
 
       return seasonProgressions.flatMap(
-        ({ progression, progressionDef, seasonDef }) =>
+        ({ progression, progressionDef, seasonDef, passDef }) =>
           progression.rewardItemStates
             .map((state, rewardIndex): UnclaimedItem => {
               const itemDef =
@@ -158,6 +195,7 @@ export const Main = React.memo(
                 progressionHash: progression.progressionHash,
                 progressionDef,
                 seasonDef,
+                seasonPassDef: passDef,
                 rewardItemSocketOverrideStates:
                   progression.rewardItemSocketOverrideStates[rewardIndex],
                 rewardItem: progressionDef.rewardItems[rewardIndex],
@@ -277,9 +315,9 @@ const useCategorizedItems = (items: UnclaimedItem[]) =>
       exoticCiphers: createCategorySet("Exotic Ciphers", "material"),
       ascendantAlloys: createCategorySet("Ascendant Alloys", "material"),
       ascendantShards: createCategorySet("Ascendant Shards", "material"),
+      unstableCores: createCategorySet("Unstable Cores", "material"),
       enhancementPrisms: createCategorySet("Enhancement Prisms", "material"),
       enhancementCores: createCategorySet("Enhancement Cores", "material"),
-      upgradeModules: createCategorySet("Upgrade Modules", "material"),
       raidBanners: createCategorySet("Raid Banners", "material"),
       glimmer: createCategorySet("Glimmer", "currency"),
       strangeCoins: createCategorySet("Strange Coins", "material"),
@@ -315,8 +353,10 @@ const useCategorizedItems = (items: UnclaimedItem[]) =>
       titanChests: createCategorySet("Titan Chestplates"),
       titanLegs: createCategorySet("Titan Greaves"),
       titanMarks: createCategorySet("Titan Marks"),
+      portalEngrams: createCategorySet("Portal Engrams", "engram"),
       seasonalEngrams: createCategorySet("Seasonal Engrams", "engram"),
       legendaryEngrams: createCategorySet("Legendary Engrams", "engram"),
+      upgradeModules: createCategorySet("Upgrade Modules", "material"),
       uncategorized: createCategorySet("Uncategorized")
     };
 
@@ -334,6 +374,8 @@ const useCategorizedItems = (items: UnclaimedItem[]) =>
         push("enhancementPrisms", item);
       } else if (itemDef.collectibleHash === 2394763654) {
         push("enhancementCores", item);
+      } else if (rewardItem.itemHash === 2718300701) {
+        push("unstableCores", item);
       } else if (itemDef.collectibleHash === 927744957) {
         push("ascendantShards", item);
       } else if (itemDef.collectibleHash === 2838481597) {
@@ -456,6 +498,11 @@ const useCategorizedItems = (items: UnclaimedItem[]) =>
         push("shaders", item);
       } else if (itemDef.inventory?.bucketTypeHash === 1469714392) {
         push("seasonalCurrencies", item);
+      } else if (
+        itemDef.inventory?.tierTypeHash === 4008398120 &&
+        itemDef.traitIds?.includes("item.engram")
+      ) {
+        push("portalEngrams", item);
       } else {
         push("uncategorized", item);
       }

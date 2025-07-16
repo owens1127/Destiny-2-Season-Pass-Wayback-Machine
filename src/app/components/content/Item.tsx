@@ -38,7 +38,7 @@ export const SeasonPassItem = React.memo(
         membershipType: item.membershipType,
         rewardIndex: item.rewardItem.rewardItemIndex,
         seasonHash: item.seasonDef.hash,
-        progressionHash: item.progressionHash
+        seasonPassHash: item.seasonPassDef.hash
       },
       {
         onError: (error) => {
@@ -48,7 +48,7 @@ export const SeasonPassItem = React.memo(
         },
         onSuccess: () => {
           toast.success("Item claimed", {
-            description: `${quantity} ${item.itemDef.displayProperties.name} has been transferred to the inventory of your ${
+            description: `${quantity} ${item.itemDef.displayProperties.name} ${quantity !== 1 ? "have" : "has"} been transferred to the inventory of your ${
               classNameMap[item.transferCharacter.classType]
             }`
           });

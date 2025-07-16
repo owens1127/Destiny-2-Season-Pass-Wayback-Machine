@@ -16,7 +16,7 @@
     "@radix-ui/react-slot": "^1.1.2",
     "@tailwindcss/vite": "^4.0.9",
     "@tanstack/react-query": "^5.66.9",
-    "bungie-net-core": "^3.0.1",
+    "bungie-net-core": "3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.476.0",

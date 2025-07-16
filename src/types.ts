@@ -6,7 +6,8 @@ import {
   DestinyProgressionRewardItemQuantity,
   DestinyProgressionRewardItemSocketOverrideState,
   DestinyProgressionRewardItemState,
-  DestinySeasonDefinition
+  DestinySeasonDefinition,
+  DestinySeasonPassDefinition
 } from "bungie-net-core/models";
 
 export type UnclaimedItem = {
@@ -19,6 +20,7 @@ export type UnclaimedItem = {
   rewardItemSocketOverrideStates: DestinyProgressionRewardItemSocketOverrideState;
   itemDef: DestinyInventoryItemDefinition;
   seasonDef: DestinySeasonDefinition;
+  seasonPassDef: DestinySeasonPassDefinition;
   state: DestinyProgressionRewardItemState;
   canClaimThisSeason: boolean;
 };
