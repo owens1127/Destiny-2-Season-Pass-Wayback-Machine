@@ -128,7 +128,7 @@ export class BungieHttpClient {
     membershipType: BungieMembershipType;
     rewardIndex: number;
     seasonHash: number;
-    progressionHash: number;
+    seasonPassHash: number;
   }) {
     const response: BungieNetResponse<unknown> = await this.platformHttp({
       baseUrl:
