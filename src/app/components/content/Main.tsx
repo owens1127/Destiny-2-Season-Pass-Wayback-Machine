@@ -133,8 +133,6 @@ export const Main = React.memo(
       seasonPassDefs.data
     ]);
 
-    console.log(seasonProgressions);
-
     const earliestVisibileSeason = React.useMemo(
       () =>
         seasonProgressions.sort(
