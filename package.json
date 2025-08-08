@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -b && vite build",
     "zip:build": "rm -f build.zip && cd build && zip -r ../build.zip .",
-    "zip:src": "rm -f src.zip && zip -r src.zip src .env .prettierrc bun.lockb *.json eslint.config.js icon.png vite.config.ts",
+    "zip:src": "rm -f src.zip && zip -r src.zip src .env .prettierrc bun.lockb *.json eslint.config.js vite.config.ts *.md icon.png",
     "lint": "eslint .",
     "format": "prettier --write .",
     "preview": "vite preview"

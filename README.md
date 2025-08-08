@@ -1,5 +1,22 @@
 # Destiny 2 Season Pass Wayback Machine
 
+## Building the extension from Source
+
+### Requirements
+
+- bun package manager
+
+### Build commands
+
+The following will build the extension from source into the `build` directory.
+
+```bash
+# Install dependencies
+bun install
+# Build the extension
+bun vite build
+```
+
 ## Installling the extension (unpacked)
 
 If you want to install the extension from source, you can do so by following these steps.
