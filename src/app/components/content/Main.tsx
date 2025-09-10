@@ -2,7 +2,9 @@ import React from "react";
 import {
   DestinyCharacterComponent,
   DestinyCharacterProgressionComponent,
-  DestinyClass
+  DestinyClass,
+  DestinySeasonDefinition,
+  DestinySeasonPassReference
 } from "bungie-net-core/models";
 import { useDestinyManifestComponentsSuspended } from "@/app/hooks/useDestinyManifestComponent";
 import { ItemVariant, UnclaimedItem } from "@/types";
@@ -113,15 +115,31 @@ export const Main = React.memo(
           const passDef = seasonPasses.find(
             (pass) => pass.rewardProgressionHash === progression.progressionHash
           )!;
-          const seasonDef = seasons.find((season) =>
-            season.seasonPassList.some(
+
+          let passRef: DestinySeasonPassReference | null = null;
+          let seasonDef: DestinySeasonDefinition | null = null;
+          for (const season of seasons) {
+            const foundPass = season.seasonPassList.find(
               (pass) => pass.seasonPassHash === passDef.hash
-            )
-          )!;
+            );
+            if (foundPass) {
+              passRef = foundPass;
+              seasonDef = season;
+              break;
+            }
+          }
+
+          if (!seasonDef || !passRef) {
+            throw new Error(
+              `Could not find season or pass for progression hash ${progression.progressionHash}`
+            );
+          }
+
           return {
             progression,
             seasonDef,
             passDef,
+            passRef,
             progressionDef: progressionDefs.data[progression.progressionHash]
           };
         })
@@ -167,7 +185,7 @@ export const Main = React.memo(
       const now = Date.now();
 
       return seasonProgressions.flatMap(
-        ({ progression, progressionDef, seasonDef, passDef }) =>
+        ({ progression, progressionDef, seasonDef, passRef, passDef }) =>
           progression.rewardItemStates
             .map((state, rewardIndex): UnclaimedItem => {
               const itemDef =
@@ -201,7 +219,7 @@ export const Main = React.memo(
                 state,
                 canClaimThisSeason:
                   new Date(
-                    seasonDef.endDate ?? Number.MAX_SAFE_INTEGER
+                    passRef.seasonPassEndDate ?? Number.MAX_SAFE_INTEGER
                   ).getTime() < now
               };
             })

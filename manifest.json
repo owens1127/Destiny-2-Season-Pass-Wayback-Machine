@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Destiny 2 Season Pass Wayback Machine",
   "description": "A simple extension which allows you to view and claim earned but unclaimed season pass rewards from past seasons in Destiny 2.",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "icons": {
     "128": "assets/icon.png"
   },
